@@ -1,0 +1,1 @@
+# AzureResources-NameGenerator
