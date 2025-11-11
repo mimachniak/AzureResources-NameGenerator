@@ -18,16 +18,20 @@ This module simplifies the process of creating Azure resource names that align w
 ---
 
 ## Key Features  
-- 🔹 **Name Generation:** Generates compliant names for Azure resources (e.g., VMs, Storage Accounts, Resource Groups, etc.).  
-- 🔹 **Validation:** Validates names against Azure naming conventions and provides feedback.    
+- **Name Generation:** Generates compliant names for Azure resources (e.g., VMs, Storage Accounts, Resource Groups, etc.).  
+- **Validation:** Validates names against Azure naming conventions and provides feedback.    
 
 ---
 
-## Example Usage
+## Install module on your desktop
 
 ```powershell
 # Import module
-Import-Module AzureResourceNameGenerator
+Import-Module AzureNameGenerator
+
+# Install module 
+
+Install-Module AzureNameGenerator
 
 # Get all available resource types
 Get-AzResourceName -ShowOnlyResourceType
@@ -37,3 +41,35 @@ Get-AzResourceName -ShowResourcesDetails
 
 # Generate a name for a specific Azure resource type
 Get-AzResourceName -ResourceType "Microsoft.Storage/storageAccounts" -Region "eastus" -Project "FinOps"
+
+```
+
+## Get resources data
+
+```powershell
+
+# Get all available resource types
+Get-AzResourcesListGenerator -ShowOnlyResourceType
+
+# Get naming details for specific resources
+Get-AzResourcesListGenerator -ShowResourcesDetails
+
+# Get all data stored in JSON file on repo: https://github.com/mspnp/AzureNamingTool
+Get-AzResourcesListGenerator
+
+```
+
+## Generate name for Azure resources
+
+```powershell
+
+# Generate name for multiple resources
+
+New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites", "Subscription/subscriptions") -regionName "West Europe" -uniqueidentifier MARK@ -number 1 -separator "-"
+
+# Generate name for multiple resources and convert all to lower cases
+
+New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true
+
+
+```
