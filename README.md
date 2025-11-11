@@ -161,4 +161,29 @@ File above will generate resources name schema that will looki like this:
 
 ```
 
+## Limitations 
+    - Naming schema supports only JSON
+    - Resource type supports only JSON
+
+## Features
+
+    - Add more resource types and their specific naming rules to the resource_schema.json file.
+    - Implement additional transformations or validations as needed.
+    - Integrate with Azure CLI or PowerShell Az module to validate names against existing resources.
+    - Add logging for better traceability.
+    - Implement unit tests to validate the naming logic.
+    - Create a GUI for easier input of parameters.
+    - Allow exporting the generated names to a file or clipboard.
+    - Add option to use separator or not based on resource type.
+    - Custom schema for different resource types.
+    - Add support for more complex naming conventions.
+    - Load suggestion of resources from external source (e.g., CSV, database).
+    - Add interactive mode for user input.
+    - Add multi rsource name generation in one run.
+    - Add correction suggestions for invalid names.
+    - Add corelation between resources (e.g., VM and its associated resources).
+    - Convert to module for easier reuse.
+    - Export to bicep or ARM template.
+    - Generated bicpe variables for resource names.
+
 
