@@ -39,6 +39,7 @@ This module simplifies the process of creating Azure resource names that align w
 - **Name Generation:** Generates compliant names for Azure resources (e.g., VMs, Storage Accounts, Resource Groups, etc.). 
 - **Bring you own naming convention** Loading your own custom naming schema with transformations in Json files. 
 - **Validation:** Validates names against Azure naming conventions and provides feedback.    
+- **Load your data** PowerShell module allow to load resource data / namiing schema form any source but in JSON type. 
 
 ---
 
@@ -90,7 +91,7 @@ New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/stora
 
 This json files describe how your resource shcema will looks like 
 
-- **name** - descibe parameters used in PowerShell moduel, cannot be change
+- **name** - descibe parameters used in PowerShell module, cannot be change
 - **length** - max lenght of name part, will be cutoff automatical
 - **order** - order descibe sorting parts of naming convention generator.
 - **transformation** - is it reguired transformation true / false  
@@ -153,5 +154,11 @@ This json files describe how your resource shcema will looks like
 ```
 
 ### Example of schema for resources base on json file 
+
+File above will generate resources name schema that will looki like this:
+
+```bicep
+
+```
 
 
