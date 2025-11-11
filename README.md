@@ -159,7 +159,9 @@ This json files describe how your resource shcema will looks like
 
 File above will generate resources name schema that will looki like this:
 
-```bicep
+```powershell
+
+environment-uniqueidentifier-regionName-abbreviation-number
 
 ```
 
