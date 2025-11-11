@@ -18,7 +18,8 @@ This module simplifies the process of creating Azure resource names that align w
 ---
 
 ## Key Features  
-- **Name Generation:** Generates compliant names for Azure resources (e.g., VMs, Storage Accounts, Resource Groups, etc.).  
+- **Name Generation:** Generates compliant names for Azure resources (e.g., VMs, Storage Accounts, Resource Groups, etc.). 
+- **Bring you own naming convention** Loading your own custom naming schema with transformations. 
 - **Validation:** Validates names against Azure naming conventions and provides feedback.    
 
 ---
@@ -32,15 +33,6 @@ Import-Module AzureNameGenerator
 # Install module 
 
 Install-Module AzureNameGenerator
-
-# Get all available resource types
-Get-AzResourceName -ShowOnlyResourceType
-
-# Get naming details for specific resources
-Get-AzResourceName -ShowResourcesDetails
-
-# Generate a name for a specific Azure resource type
-Get-AzResourceName -ResourceType "Microsoft.Storage/storageAccounts" -Region "eastus" -Project "FinOps"
 
 ```
 
