@@ -19,7 +19,7 @@ This module simplifies the process of creating Azure resource names that align w
 
 ## Key Features  
 - **Name Generation:** Generates compliant names for Azure resources (e.g., VMs, Storage Accounts, Resource Groups, etc.). 
-- **Bring you own naming convention** Loading your own custom naming schema with transformations. 
+- **Bring you own naming convention** Loading your own custom naming schema with transformations in Json files. 
 - **Validation:** Validates names against Azure naming conventions and provides feedback.    
 
 ---
