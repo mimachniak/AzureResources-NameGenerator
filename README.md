@@ -93,10 +93,10 @@ This json files describe how your resource shcema will looks like
 - **name** - descibe parameters used in PowerShell moduel, cannot be change
 - **length** - max lenght of name part, will be cutoff automatical
 - **order** - order descibe sorting parts of naming convention generator.
-- **transformation** - is it reguired transformation true / false
-        - **transformationRegex** - regexp of transformation
-        - **pattern** - pattern of transformation
-        - **replacement** - replacemnt of transformation
+- **transformation** - is it reguired transformation true / false  
+        - **transformationRegex** - regexp of transformation  
+        - **pattern** - pattern of transformation  
+        - **replacement** - replacemnt of transformation  
 
 ### Example of Json file with naming schema
 
