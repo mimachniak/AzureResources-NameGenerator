@@ -157,11 +157,33 @@ This json files describe how your resource shcema will looks like
 
 ### Example of schema for resources base on json file 
 
-File above will generate resources name schema that will looki like this:
+File above will generate resources name schema that will look like this:
 
 ```powershell
 
 environment-uniqueidentifier-regionName-abbreviation-number
+
+```
+
+Output for this resources will in this schema will be like this: 
+
+```powershell
+
+Generated resource Storage/storageAccounts name base on schema and transformation: Prod-MARK@-WEu-stvm-01
+Resource name: prodmarkweustvm01 # remove characters that are not allowed
+Generated resource Storage/storageAccounts name base on schema and transformation: Prod-MARK@-WEu-st-01
+Resource name: prodmarkweust01 # remove characters that are not allowed
+Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-stapp-01
+Resource name: Prod-MARK-WEu-stapp-01 # remove characters that are not allowed
+Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-app-01
+Resource name: Prod-MARK-WEu-app-01 # remove characters that are not allowed
+Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-func-01
+Resource name: Prod-MARK-WEu-func-01 # remove characters that are not allowed
+Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-ase-01
+Resource name: Prod-MARK-WEu-ase-01 # remove characters that are not allowed
+Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-aswba-01
+Resource name: Prod-MARK-WEu-aswba-01 # remove characters that are not allowed
+Generated resource Subscription/subscriptions name base on schema and transformation: Prod-MARK@-WEu-subcr-01
 
 ```
 
