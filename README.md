@@ -4,7 +4,7 @@
 ## Overview
 The **Azure Resource Name Generator PowerShell Module** provides an automated and standardized way to generate compliant, consistent, and meaningful names for Azure resources base on your own defined schema for resources. 
 
-It integrates with [**Azure Naming Tools**]("https://github.com/mspnp/AzureNamingTool"), buy loading resources and requirements
+It integrates with [**Azure Naming Tools**](https://github.com/mspnp/AzureNamingTool), buy loading resources and requirements
 
 ---
 
@@ -52,6 +52,9 @@ Get-AzResourcesListGenerator
 ```
 
 ## Generate name for Azure resources
+
+- **Loaded naming schema file:** [general resources naming shema](https://raw.githubusercontent.com/mimachniak/AzureResources-NameGenerator/refs/heads/main/data/general_naming_shema.json)
+- **Loaded resources file:** [Resource types file](https://raw.githubusercontent.com/mspnp/AzureNamingTool/refs/heads/main/src/repository/resourcetypes.json")
 
 ```powershell
 
