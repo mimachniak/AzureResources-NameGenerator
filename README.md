@@ -1,12 +1,30 @@
 
 # 🧭 Azure Resource Name Generator PowerShell Module
 
+![PowerShell Gallery](https://img.shields.io/powershellgallery/v/AzureResourceNameGenerator.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Platform](https://img.shields.io/badge/platform-PowerShell%207%2B-lightgrey)
+
+---
+
+## 📘 Table of Contents
+- [Overview](#overview)
+- [Purpose](#purpose)
+- [Key Features](#key-features)
+- [Install module on your desktop](#install-module-on-your-desktop)
+- [Get resources data](#get-resources-data)
+- [Generate name for Azure resources](#generate-name-for-Azure-resources)
+
+---
+
 ## Overview
 The **Azure Resource Name Generator PowerShell Module** provides an automated and standardized way to generate compliant, consistent, and meaningful names for Azure resources base on your own defined schema for resources. 
 
 It integrates with [**Azure Naming Tools**](https://github.com/mspnp/AzureNamingTool), buy loading resources and requirements
 
 ---
+
+
 
 ## Purpose
 This module simplifies the process of creating Azure resource names that align with organizational or Microsoft best practices by:
