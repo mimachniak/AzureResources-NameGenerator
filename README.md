@@ -84,5 +84,74 @@ New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/stora
 
 New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true
 
+```
+
+## Naming Schema file guide and example 
+
+This json files describe how your resource shcema will looks like 
+
+- **name** - descibe parameters used in PowerShell moduel, cannot be change
+- **length** - max lenght of name part, will be cutoff automatical
+- **order** - order descibe sorting parts of naming convention generator.
+- **transformation** - is it reguired transformation true / false
+        - **transformationRegex** - regexp of transformation
+        - **pattern** - pattern of transformation
+        - **replacement** - replacemnt of transformation
+
+### Example of Json file with naming schema
+
+```json
+
+[
+
+    {
+        "name": "environment", # cannot to be channge 
+        "length": 5,
+        "order": 1,
+        "transformation": false,
+        "transformationRegex": {}
+    },
+    {
+        "name": "uniqueidentifier", # cannot to be channge 
+        "length": 50,
+        "order": 2,
+        "transformation": false,
+        "transformationRegex": {}
+        
+    },
+    {
+        "name": "regionName", # cannot to be channge 
+        "length": 3,
+        "order": 3,
+        "transformation": true,
+        "transformationRegex": {
+            "pattern": "^(\\w)\\w*\\s+(\\w{2})\\w*$", 
+            "replacement": "$1$2"
+        }
+    },
+    {
+        "name": "abbreviation", # cannot to be channge 
+        "length": 6,
+        "order": 4,
+        "transformation": false,
+        "transformationRegex": {}
+    },
+    {
+        "name": "number", # cannot to be channge 
+        "length": 1,
+        "order": 5,
+        "transformation": true,
+        "transformationRegex": {
+            "pattern": "\\b(\\d)\\b",
+            "replacement": "0$1"
+        }
+    }
+
+]
+
 
 ```
+
+### Example of schema for resources base on json file 
+
+
