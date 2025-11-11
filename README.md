@@ -14,6 +14,8 @@
 - [Install module on your desktop](#install-module-on-your-desktop)
 - [Get resources data](#get-resources-data)
 - [Generate name for Azure resources](#generate-name-for-Azure-resources)
+- [Limitations](#limitations)
+- [Features](#features)
 
 ---
 
