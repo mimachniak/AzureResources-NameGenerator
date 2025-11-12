@@ -1,4 +1,4 @@
-    @{
+@{
     # Script module or binary module file associated with this manifest.
     RootModule = 'AzureResourcesNameGenerator.psm1'
 
@@ -27,20 +27,20 @@
     PowerShellVersion = '5.1'
 
     # Functions to export from this module
-    FunctionsToExport = @('*')
+    FunctionsToExport = @()
 
     # Cmdlets to export from this module
     CmdletsToExport = @()
 
     # Variables to export from this module
-    VariablesToExport = @('*')
+    VariablesToExport = @()
 
     # Aliases to export from this module
     AliasesToExport = @()
 
     PrivateData      = @{
         PSData = @{
-            ExternalModuleDependencies = @('Microsoft.PowerShell.Management', 'Microsoft.PowerShell.Utility')
+            # ExternalModuleDependencies = @('Microsoft.PowerShell.Management', 'Microsoft.PowerShell.Utility')
             ProjectUri                 = 'https://github.com/mimachniak/AzureResources-NameGenerator'
             Tags                       = @('Azure', 'Naming', 'Convention', 'Generator', 'Validation')
 
@@ -49,6 +49,6 @@
 
             # Prerelease string of this module
             Prerelease   = ''
-        }
-    }
-    }
+        } # End of PSData hashtable
+    } # End of PrivateData hashtable
+} # End of module manifest hashtable
