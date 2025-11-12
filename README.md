@@ -9,8 +9,8 @@
 
 ## 📘 Table of Contents
 - [Overview](#overview)
+  - [Default loaded data](#Default-loaded-data)
 - [Purpose](#purpose)
-- [Default loaded data](#Default-loaded-data)
 - [Key Features](#key-features)
 - [Install module on your desktop](#install-module-on-your-desktop)
 - [Get resources data](#get-resources-data)
