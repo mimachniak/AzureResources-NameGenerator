@@ -1,6 +1,6 @@
     @{
     # Script module or binary module file associated with this manifest.
-    RootModule = ''
+    RootModule = 'AzureResourcesNameGenerator.psm1'
 
     # Version number of this module.
     ModuleVersion = '1.0.0'
@@ -12,13 +12,13 @@
     GUID = 'c49b051b-c0ff-4652-b1ee-f73226a15799'
 
     # Author of this module
-    Author = 'Michał Machniak'
+    Author = 'Michal Machniak'
 
     # Company or vendor of this module
-    CompanyName = 'Michał Machniak'
+    CompanyName = 'Michal Machniak'
 
     # Copyright statement for this module
-    Copyright = '(c) Michał Machniak. All rights reserved.'
+    Copyright = '(c) Michal Machniak. All rights reserved.'
 
     # Description of the functionality provided by this module
     Description = 'PowerShell module generates Azure resource names based on a predefined naming convention schema and resource-specific rules.It ensures that the generated names comply with Azure naming restrictions and best practices'
@@ -43,6 +43,12 @@
             ExternalModuleDependencies = @('Microsoft.PowerShell.Management', 'Microsoft.PowerShell.Utility')
             ProjectUri                 = 'https://github.com/mimachniak/AzureResources-NameGenerator'
             Tags                       = @('Azure', 'Naming', 'Convention', 'Generator', 'Validation')
+
+            # ReleaseNotes of this module
+            ReleaseNotes = ''
+
+            # Prerelease string of this module
+            Prerelease   = ''
         }
     }
     }
