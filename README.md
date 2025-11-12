@@ -78,6 +78,23 @@ Get-AzResourcesListGenerator
 
 ```
 
+### Ouput for function example 
+
+```powershell
+
+Using default WEB data source for resource types, defined in this repo: https://github.com/mspnp/AzureNamingTool
+AnalysisServices/servers
+ApiManagement/service
+ApiManagement/service/api-version-sets
+ApiManagement/service/apis
+ApiManagement/service/apis/issues
+ApiManagement/service/apis/issues/attachments
+ApiManagement/service/apis/issues/comments
+ApiManagement/service/apis/operations
+
+
+```
+
 ## Generate name for Azure resources
 
 - **Loaded naming schema file:** [general resources naming shema](https://raw.githubusercontent.com/mimachniak/AzureResources-NameGenerator/refs/heads/main/data/general_naming_shema.json)
