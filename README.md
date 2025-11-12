@@ -1,7 +1,7 @@
 
 # 🧭 Azure Resource Name Generator PowerShell Module
 
-![PowerShell Gallery](https://img.shields.io/powershellgallery/v/AzureResourceNameGenerator.svg)
+![PowerShell Gallery](https://img.shields.io/powershellgallery/v/AzureResourcesNameGenerator.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-PowerShell%207%2B-lightgrey)
 
