@@ -49,11 +49,11 @@ This module simplifies the process of creating Azure resource names that align w
 
 ```powershell
 # Import module
-Import-Module AzureNameGenerator
+Import-Module AzureResourcesNameGenerator
 
 # Install module 
 
-Install-Module AzureNameGenerator
+Install-Module AzureResourcesNameGenerator
 
 ```
 
@@ -152,7 +152,6 @@ This json files describe how your resource shcema will looks like
 
 ]
 
-
 ```
 
 ### Example of schema for resources base on json file 
@@ -165,7 +164,11 @@ environment-uniqueidentifier-regionName-abbreviation-number
 
 ```
 
-Output for this resources will in this schema will be like this: 
+### Input Data for schema and actions base on file
+
+
+
+### Output for this resources will in this schema will be like this: 
 
 ```powershell
 

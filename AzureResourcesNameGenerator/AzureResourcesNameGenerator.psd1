@@ -27,7 +27,7 @@
     PowerShellVersion = '5.1'
 
     # Functions to export from this module
-    FunctionsToExport = @()
+    FunctionsToExport = @('*')
 
     # Cmdlets to export from this module
     CmdletsToExport = @()
