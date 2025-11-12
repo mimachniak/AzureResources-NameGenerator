@@ -13,7 +13,12 @@
 - [Key Features](#key-features)
 - [Install module on your desktop](#install-module-on-your-desktop)
 - [Get resources data](#get-resources-data)
+   - [Ouput for function example](#Ouput-for-function-example )
 - [Generate name for Azure resources](#generate-name-for-Azure-resources)
+   - [Naming Schema file guide and example](#Naming-Schema-file-guide-and-example)
+   - [Example of Json file with naming schema](#Example-of-Json-file-with-naming-schema)
+   - [Example of schema for resources base on json file ](#Example-of-schema-for-resources-base-on-json-file)
+   - [Output resources names ](#Output-resources-names)
 - [Limitations](#limitations)
 - [Features](#features)
 
@@ -196,7 +201,7 @@ environment-uniqueidentifier-regionName-abbreviation-number
 -number 1 - **will be transformation to "01" base on schema declaration**  
 -separator "-"  
 
-### Output for this resources will in this schema will be like this: 
+### Output resources names:   
 
 ```powershell
 
