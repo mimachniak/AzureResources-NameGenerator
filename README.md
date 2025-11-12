@@ -172,12 +172,12 @@ environment-uniqueidentifier-regionName-abbreviation-number
 
 ### Input Data for schema and actions base on file
 
--environment Prod 
--resourceTypeName @("Storage/storageAccounts", "Web/sites", "Subscription/subscriptions") 
--regionName "West Europe" **will be transformation to WEu base on schema declaration**
--uniqueidentifier MARK@ - **Remove all characters that are not allowed**
--number 1 - **will be transformation to "01" base on schema declaration**
--separator "-"
+-environment Prod  
+-resourceTypeName @("Storage/storageAccounts", "Web/sites", "Subscription/subscriptions")  
+-regionName "West Europe" **will be transformation to WEu base on schema declaration**  
+-uniqueidentifier MARK@ - **Remove all characters that are not allowed**  
+-number 1 - **will be transformation to "01" base on schema declaration**  
+-separator "-"  
 
 ### Output for this resources will in this schema will be like this: 
 
