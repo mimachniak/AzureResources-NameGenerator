@@ -10,6 +10,7 @@
 ## 📘 Table of Contents
 - [Overview](#overview)
 - [Purpose](#purpose)
+- [Default loaded data](#Default-loaded-data)
 - [Key Features](#key-features)
 - [Install module on your desktop](#install-module-on-your-desktop)
 - [Get resources data](#get-resources-data)
@@ -32,12 +33,17 @@ It integrates with [**Azure Naming Tools**](https://github.com/mspnp/AzureNaming
 The current list of commands implemented in the module:
 
 - [New-AzResourceNameGenerator](./docs/New-AzResourceNameGenerator.md)
-- [Get-AzResourcesListGenerator](./docs/Get-AzResourcesListGenerator.md)
+- [Get-AzResourcesListGenerator](./docs/Get-AzResourcesListGenerator.md)  
 
 
 ---
 
+## Default loaded data:
 
+- **Loaded naming schema file:** [general resources naming shema](https://raw.githubusercontent.com/mimachniak/AzureResources-NameGenerator/refs/heads/main/data/general_naming_shema.json)
+- **Loaded resources file:** [Resource types file](https://raw.githubusercontent.com/mspnp/AzureNamingTool/refs/heads/main/src/repository/resourcetypes.json")
+
+---
 
 ## Purpose
 This module simplifies the process of creating Azure resource names that align with organizational or Microsoft best practices by:
