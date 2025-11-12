@@ -22,7 +22,13 @@
 ## Overview
 The **Azure Resource Name Generator PowerShell Module** provides an automated and standardized way to generate compliant, consistent, and meaningful names for Azure resources base on your own defined schema for resources. 
 
-It integrates with [**Azure Naming Tools**](https://github.com/mspnp/AzureNamingTool), buy loading resources and requirements
+It integrates with [**Azure Naming Tools**](https://github.com/mspnp/AzureNamingTool), buy loading resources and requirements.  
+
+The current list of commands implemented in the module:
+
+- [New-AzResourceNameGenerator](./docs/New-AzResourceNameGenerator.md)
+- [Get-AzResourcesListGenerator](./docs/Get-AzResourcesListGenerator.md)
+
 
 ---
 
@@ -166,7 +172,12 @@ environment-uniqueidentifier-regionName-abbreviation-number
 
 ### Input Data for schema and actions base on file
 
-
+-environment Prod 
+-resourceTypeName @("Storage/storageAccounts", "Web/sites", "Subscription/subscriptions") 
+-regionName "West Europe" **will be transformation to WEu base on schema declaration**
+-uniqueidentifier MARK@ - **Remove all characters that are not allowed**
+-number 1 - **will be transformation to "01" base on schema declaration**
+-separator "-"
 
 ### Output for this resources will in this schema will be like this: 
 
