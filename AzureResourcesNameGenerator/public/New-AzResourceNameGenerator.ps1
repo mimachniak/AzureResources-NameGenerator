@@ -86,103 +86,103 @@ param(
         [Parameter(Mandatory = $true)][string]$regex
     )
 
-    Write-Verbose "Sanitize-String: Input='$string' Regex='$regex'"
+        Write-Verbose "Sanitize-String: Input='$string' Regex='$regex'"
 
-    # quick pass if already valid
-    if ($string -match $regex) {
-        Write-Verbose "String already valid per regex."
-        return @{ Sanitized = $string; RemovedChars = "" }
-    }
-
-    $sanitized = $string
-    $removedChars = ""
-
-    # --- Extract bracket groups and expand ranges into literal characters ---
-    $allowedCharsMatches = [regex]::Matches($regex, '\[([^\]]+)\]')
-    $expandedAllowed = ""
-
-    foreach ($m in $allowedCharsMatches) {
-        $group = $m.Groups[1].Value
-        # Use -creplace (case-sensitive) to correctly expand ranges
-        $group = $group -creplace 'a-z', 'abcdefghijklmnopqrstuvwxyz'
-        $group = $group -creplace 'A-Z', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        $group = $group -creplace '0-9', '0123456789'
-        $expandedAllowed += $group
-        Write-Verbose "Expanded character group: '$group'"
-    }
-
-    if (-not $expandedAllowed) {
-        $expandedAllowed = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
-    }
-
-    # Preserve first-seen order and remove duplicates
-    $seen = New-Object System.Collections.Generic.List[char]
-    foreach ($c in $expandedAllowed.ToCharArray()) {
-        if (-not $seen.Contains($c)) { $seen.Add($c) }
-    }
-    $uniqueAllowed = -join $seen
-
-    # --- Determine case rules from the expanded literal set ---
-    $hasUpper = $false; $hasLower = $false
-    foreach ($c in $uniqueAllowed.ToCharArray()) {
-        if ([char]::IsUpper($c)) { $hasUpper = $true }
-        if ([char]::IsLower($c)) { $hasLower = $true }
-    }
-
-    Write-Verbose "Expanded allowed chars (literal): $uniqueAllowed"
-    Write-Verbose "Case detection -> HasUpper=$hasUpper HasLower=$hasLower"
-
-    # --- Build safe character class: escape meta-chars, move hyphen last ---
-    $safeAllowed = $uniqueAllowed -replace '([\\\^\]\[])', '\\$1'
-    if ($safeAllowed -match '-') {
-        $safeAllowed = ($safeAllowed -replace '-', '') + '-'
-    }
-    $pattern = "[^$safeAllowed]"
-    Write-Verbose "Constructed removal pattern: $pattern"
-
-    # --- Remove disallowed chars and record them ---
-    $removedChars = -join (($sanitized -split '') | Where-Object { $_ -match $pattern })
-    $sanitized = ($sanitized -replace $pattern, '')
-
-    # --- Trim invalid leading/trailing dashes if regex forbids them ---
-    if ($regex -match '^\^\[a-zA-Z0-9\]' -and $regex -match '\[a-zA-Z0-9\]\$$') {
-        $beforeTrim = $sanitized
-        $sanitized = $sanitized.Trim('-')
-        if ($beforeTrim -ne $sanitized) {
-            Write-Verbose "Trimmed leading/trailing hyphens."
+        # quick pass if already valid
+        if ($string -match $regex) {
+            Write-Verbose "String already valid per regex."
+            return @{ Sanitized = $string; RemovedChars = "" }
         }
-    }
 
-    # --- Enforce max length if present ---
-    $max = $null
-    if ($regex -match '\{(?:\d+),(\d+)\}') {
-        $max = [int]$matches[1]
-    } elseif ($regex -match '\{(\d+)\}') {
-        $max = [int]$matches[1]
-    }
-    if ($max -and $sanitized.Length -gt $max) {
-        $removedFromTrim = $sanitized.Substring($max)
-        $sanitized = $sanitized.Substring(0, $max)
-        $removedChars += $removedFromTrim
-        Write-Verbose "Trimmed to max length $max"
-    }
+        $sanitized = $string
+        $removedChars = ""
 
-    # --- Defensive case application using expanded literal set ---
-    if ($hasLower -and -not $hasUpper) {
-        Write-Verbose "Lowercase-only allowed by expanded set → converting to lowercase (Invariant)."
-        $sanitized = $sanitized.ToLowerInvariant()
-    } elseif ($hasUpper -and $hasLower) {
-        Write-Verbose "Mixed-case allowed by expanded set → preserving case."
-    } else {
-        Write-Verbose "Case not explicit or digits-only → preserving original case."
-    }
+        # --- Extract bracket groups and expand ranges into literal characters ---
+        $allowedCharsMatches = [regex]::Matches($regex, '\[([^\]]+)\]')
+        $expandedAllowed = ""
 
-    Write-Verbose "Output: Sanitized='$sanitized' Removed='$removedChars'"
+        foreach ($m in $allowedCharsMatches) {
+            $group = $m.Groups[1].Value
+            # Use -creplace (case-sensitive) to correctly expand ranges
+            $group = $group -creplace 'a-z', 'abcdefghijklmnopqrstuvwxyz'
+            $group = $group -creplace 'A-Z', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            $group = $group -creplace '0-9', '0123456789'
+            $expandedAllowed += $group
+            Write-Verbose "Expanded character group: '$group'"
+        }
 
-    return @{
-        Sanitized    = $sanitized
-        RemovedChars = $removedChars
-    }
+        if (-not $expandedAllowed) {
+            $expandedAllowed = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
+        }
+
+        # Preserve first-seen order and remove duplicates
+        $seen = New-Object System.Collections.Generic.List[char]
+        foreach ($c in $expandedAllowed.ToCharArray()) {
+            if (-not $seen.Contains($c)) { $seen.Add($c) }
+        }
+        $uniqueAllowed = -join $seen
+
+        # --- Determine case rules from the expanded literal set ---
+        $hasUpper = $false; $hasLower = $false
+        foreach ($c in $uniqueAllowed.ToCharArray()) {
+            if ([char]::IsUpper($c)) { $hasUpper = $true }
+            if ([char]::IsLower($c)) { $hasLower = $true }
+        }
+
+        Write-Verbose "Expanded allowed chars (literal): $uniqueAllowed"
+        Write-Verbose "Case detection -> HasUpper=$hasUpper HasLower=$hasLower"
+
+        # --- Build safe character class: escape meta-chars, move hyphen last ---
+        $safeAllowed = $uniqueAllowed -replace '([\\\^\]\[])', '\\$1'
+        if ($safeAllowed -match '-') {
+            $safeAllowed = ($safeAllowed -replace '-', '') + '-'
+        }
+        $pattern = "[^$safeAllowed]"
+        Write-Verbose "Constructed removal pattern: $pattern"
+
+        # --- Remove disallowed chars and record them ---
+        $removedChars = -join (($sanitized -split '') | Where-Object { $_ -match $pattern })
+        $sanitized = ($sanitized -replace $pattern, '')
+
+        # --- Trim invalid leading/trailing dashes if regex forbids them ---
+        if ($regex -match '^\^\[a-zA-Z0-9\]' -and $regex -match '\[a-zA-Z0-9\]\$$') {
+            $beforeTrim = $sanitized
+            $sanitized = $sanitized.Trim('-')
+            if ($beforeTrim -ne $sanitized) {
+                Write-Verbose "Trimmed leading/trailing hyphens."
+            }
+        }
+
+        # --- Enforce max length if present ---
+        $max = $null
+        if ($regex -match '\{(?:\d+),(\d+)\}') {
+            $max = [int]$matches[1]
+        } elseif ($regex -match '\{(\d+)\}') {
+            $max = [int]$matches[1]
+        }
+        if ($max -and $sanitized.Length -gt $max) {
+            $removedFromTrim = $sanitized.Substring($max)
+            $sanitized = $sanitized.Substring(0, $max)
+            $removedChars += $removedFromTrim
+            Write-Verbose "Trimmed to max length $max"
+        }
+
+        # --- Defensive case application using expanded literal set ---
+        if ($hasLower -and -not $hasUpper) {
+            Write-Verbose "Lowercase-only allowed by expanded set → converting to lowercase (Invariant)."
+            $sanitized = $sanitized.ToLowerInvariant()
+        } elseif ($hasUpper -and $hasLower) {
+            Write-Verbose "Mixed-case allowed by expanded set → preserving case."
+        } else {
+            Write-Verbose "Case not explicit or digits-only → preserving original case."
+        }
+
+        Write-Verbose "Output: Sanitized='$sanitized' Removed='$removedChars'"
+
+        return @{
+            Sanitized    = $sanitized
+            RemovedChars = $removedChars
+        }
     } # end function Sanitize-String
 
 # check there is data in response for resource types
@@ -208,6 +208,8 @@ param(
         Write-Verbose "Sanitize-String: '$string' using regex '$regex' → pattern '$pattern' → '$sanitized'"
 
     }
+
+    $resourceOutput = @()
 
     # check there is data in response for schema
     if ($ResourceNameSchema -match '^(http://|https://|ftp://)') {
@@ -302,14 +304,30 @@ param(
                 else {
                 $result = Sanitize-String -string $original -regex "$regex"
                 Write-Verbose "Orginal string base on parameters: $original"
-                Write-Host "Resource name: $($result.Sanitized)"
+                Write-Verbose "Resource name: $($result.Sanitized)"
                 Write-Verbose "Removed characters form string: $($result.RemovedChars)"
+
+
+                $resourceOutput += [PSCustomObject]@{
+                        resourceTypeName = $resourceTypeName
+                        regionName       = $regionName
+                        uniqueidentifier = $uniqueidentifier
+                        environment      = $environment
+                        abbreviation     = $resource.ShortName
+                        number           = $number
+                        resourceNameGenerated     = $result.Sanitized
+                        removedChars     = $result.RemovedChars
+                    }
+
                 }
             }
   
 
             } # foreach end resource in resourceTypeName
-    } # foreach end resourceTypeNames
+    
+        } # foreach end resourceTypeNames
+
+            $resourceOutput
 
 
     } # else end respond is true

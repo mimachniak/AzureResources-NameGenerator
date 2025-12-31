@@ -3,7 +3,7 @@
     RootModule = 'AzureResourcesNameGenerator.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.2'
+    ModuleVersion = '1.0.3'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop', 'Core')
@@ -30,7 +30,7 @@
     FunctionsToExport = @('*')
 
     # Cmdlets to export from this module
-    CmdletsToExport = @()
+    CmdletsToExport = @('New-AzResourceNameGenerator','Get-AzResourcesListGenerator')
 
     # Variables to export from this module
     VariablesToExport = @()
@@ -42,10 +42,19 @@
         PSData = @{
             # ExternalModuleDependencies = @('Microsoft.PowerShell.Management', 'Microsoft.PowerShell.Utility')
             ProjectUri                 = 'https://github.com/mimachniak/AzureResources-NameGenerator'
+            LicenseUri                 = 'https://github.com/mimachniak/AzureResources-NameGenerator/blob/main/LICENSE'
+            IconUri = ''
             Tags                       = @('Azure', 'Naming', 'Convention', 'Generator', 'Validation')
 
             # ReleaseNotes of this module
-            ReleaseNotes = ''
+            ReleaseNotes = '
+            v.1.0.3
+                - Add output to PS Custom object with generated name and details.
+                - Add bicep parameter to generate bicep variable declaration.
+                - Add bicep output.
+            v.1.0.2 - Fixed minor bugs and improved performance.
+            v.1.0.0 - Initial release of AzureResourcesNameGenerator module.
+            '
 
             # Prerelease string of this module
             Prerelease   = ''

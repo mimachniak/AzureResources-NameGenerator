@@ -62,14 +62,25 @@ param(
 
     if ($ShowOnlyResourceType -and -not $ShowResourcesDetails) {
     # Show only resource types, unique and sorted
-    $responseResources.resource | Sort-Object -Unique
+    $responseResources.resource | Sort-Object -Unique | ForEach-Object {
+            [PSCustomObject]@{
+                ResourceType = $_
+            }
+        }
+        
     }
     elseif ($showResourcesDetalils) {
         # Show detailed resource information
-        $responseResources |
-            Select-Object resource, ShortName, regx, validText, invalidText |
-            Sort-Object resource |
-            Format-Table -AutoSize
+        # Return detailed objects
+        $responseResources | ForEach-Object {
+            [PSCustomObject]@{
+                Resource      = $_.resource
+                ShortName     = $_.ShortName
+                Regex         = $_.regx
+                ValidText     = $_.validText
+                InvalidText   = $_.invalidText
+            }
+        }
     }
     else {
         # Default output
