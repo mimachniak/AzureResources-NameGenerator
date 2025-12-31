@@ -6354,7 +6354,7 @@
     "ShortName": "acs",
     "scope": "",
     "lengthMin": "1",
-    "lengthMax": "60",
+    "lengthMax": "63",
     "validText": "Alphanumerics and hyphens.",
     "invalidText": "",
     "invalidCharacters": "",
@@ -6362,6 +6362,25 @@
     "invalidCharactersEnd": "",
     "invalidCharactersConsecutive": "",
     "regx": "^[A-Za-z0-9_]{1,63}$",
+    "staticValues": ""
+  },
+  {
+    "id": 335,
+    "resource": "Communication/emailServices",
+    "optional": "UnitDept",
+    "exclude": "Org,Function",
+    "property": "",
+    "ShortName": "ecs",
+    "scope": "",
+    "lengthMin": "1",
+    "lengthMax": "63",
+    "validText": "Alphanumerics and hyphens.",
+    "invalidText": "",
+    "invalidCharacters": "",
+    "invalidCharactersStart": "",
+    "invalidCharactersEnd": "",
+    "invalidCharactersConsecutive": "",
+    "regx": "^[a-zA-Z0-9-]+${1,63}$",
     "staticValues": ""
   }
 ]
