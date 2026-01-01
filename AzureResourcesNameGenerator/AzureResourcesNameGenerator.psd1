@@ -51,7 +51,8 @@
             v.1.0.3
                 - Add output to PS Custom object with generated name and details.
                 - Add bicep parameter to generate bicep variable declaration.
-                - Add bicep output.
+                - Add bicep output - Static @export() with variables.
+                - Add bicep output - Dynamic with extendableParamFiles.
             v.1.0.2 - Fixed minor bugs and improved performance.
             v.1.0.0 - Initial release of AzureResourcesNameGenerator module.
             '
