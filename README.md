@@ -236,6 +236,14 @@ New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/stora
 
 New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true
 
+# Generate bicep file with @export() variables
+
+New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true -bicepFileGeneration -bicepFileType Static -bicepFileOutputPath c:\temp\output_static.bicep
+
+# Generate bicepparam file with extendableParamFiles feature and dynamic name
+
+New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true -bicepFileGeneration -bicepFileType Dynamic -bicepFileOutputPath c:\temp\output_dynamic.bicep
+
 ```
 
 ## Naming Schema file guide and example 

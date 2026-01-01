@@ -379,6 +379,9 @@ param(
                     $resourceOutputBicep += "using none"
                     $resourceOutputBicep += ""
 
+
+                    
+
                     if ($bicepFileOutputPath.Extension -ieq ".bicep") {
                         $bicepFileOutputPath = [IO.Path]::ChangeExtension($bicepFileOutputPath.FullName, ".bicepparam")
                     }
