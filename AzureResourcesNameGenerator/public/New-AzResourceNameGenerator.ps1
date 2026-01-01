@@ -83,7 +83,7 @@ param(
     [switch]$bicepFileGeneration,
 
     [Parameter(
-        HelpMessage = "Type of name generation: Dynamic or Static for bicep generation.",
+        HelpMessage = "Type of name generation: Dynamic or Static for bicep generation. Static will create variables for each resource with generated name, Dynamic will use parameters and concat function.",
         ParameterSetName = 'Bicep'
     )]
     [ValidateSet("Dynamic", "Static")]
@@ -363,29 +363,55 @@ param(
         } # foreach end resourceTypeNames
 
             $resourceOutput
-            $attributeValue
+
+            $resourceOutput | Export-Csv "C:\temp\output.csv" -NoTypeInformation -Force
 
          ### bicep file generation can be added here in future ###
             if ($PSCmdlet.ParameterSetName -eq 'Bicep') {
                 Write-Host "Bicep generation enabled"
                 Write-Host "Output path: $bicepFileOutputPath"
+
+                $resourceOutputBicep = @()
+
                 if ($bicepFileType -eq "Dynamic") {
                     Write-Host "Bicep file type: Dynamic"
+
+                    $resourceOutputBicep += "using none"
+                    $resourceOutputBicep += ""
+
+                    if ($bicepFileOutputPath.Extension -ieq ".bicep") {
+                        $bicepFileOutputPath = [IO.Path]::ChangeExtension($bicepFileOutputPath.FullName, ".bicepparam")
+                    }
+                    if (-not (Test-Path $bicepFileOutputPath)) {                       
+                        New-Item -Path $bicepFileOutputPath -ItemType File -Force | Out-Null
+
+                        $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Force
+                    }
 
                 } elseif ($bicepFileType -eq "Static") {
 
                     Write-Host "Bicep file type: Static"
 
-                    foreach ($bicepResource in $resourceBicep) {
+                    foreach ($bicepResource in $resourceOutput) {
                         
+                        
+                        $resourceTypeNameBicep = ($bicepResource.resourceTypeName).Split('/')[-1]
+                        $resourceOutputBicep += "@export()"
+                        $resourceOutputBicep += "var $($resourceTypeNameBicep)_$($bicepResource.abbreviation)_$($bicepResource.number) = '$($bicepResource.resourceNameGenerated)'"
+                        $resourceOutputBicep += ""
 
+                    }
 
+                    if (-not (Test-Path $bicepFileOutputPath)) {
+                        New-Item -Path $bicepFileOutputPath -ItemType File -Force | Out-Null
+
+                        $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Force
                     }
 
                 }
             }
             else {
-                Write-Host "Bicep generation disabled"
+                Write-Verbose "Bicep generation disabled"
             }
         
     } # else end respond is true
