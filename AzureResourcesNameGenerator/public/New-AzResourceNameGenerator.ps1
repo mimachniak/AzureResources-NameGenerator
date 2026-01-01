@@ -29,7 +29,6 @@ function New-AzResourceNameGenerator {
     Path to the resource scheama JSON file that defines general naming convention.
 .PARAMETER ResourcesData
     Use default settings to load resource schema from web in JSON format.
-
 .PARAMETER bicepFileGeneration
     A switch to enable Bicep file generation for the resources.
 .PARAMETER bicepFileType
@@ -413,7 +412,7 @@ param(
                     if (-not (Test-Path $bicepFileOutputPath)) {                       
                         New-Item -Path $bicepFileOutputPath -ItemType File -Force | Out-Null
 
-                        $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Force
+                        $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Forces
                     }
 
                     Write-Host "Output path: $bicepFileOutputPath"
