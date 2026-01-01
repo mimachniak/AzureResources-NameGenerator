@@ -385,7 +385,25 @@ param(
                     $resourceOutputBicep += "using none"
                     $resourceOutputBicep += ""
 
+                    $resourceNameParts = foreach ($attribute in $generalNamingSchema) {
+                
+                    $name   = $attribute.name
+                    $attributeValue = $mappingTable[$name]
+                    $length    = [int]$attribute.length
+                    $transformation = [bool]$attribute.transformation
 
+                        if ($transformation -eq $true -and $attribute.transformationRegex.pattern -ne $null -and $attribute.transformationRegex.replacement -ne $null) {
+                            $attributeValue = [regex]::Replace($attributeValue, $attribute.transformationRegex.pattern, $attribute.transformationRegex.replacement)
+                        } 
+
+                        # Truncate to limit and don't transform just substring
+                        if (($attributeValue.length -gt $length) -and ($transformation -eq $false)) {
+                        $attributeValue = $attributeValue.Substring(0, $length)
+                        }
+
+                        $resourceOutputBicep += "param $($attribute.name) = '$attributeValue'"
+                        $resourceOutputBicep += ""
+                    }
                     
 
                     if ($bicepFileOutputPath -like "*.bicep") {
