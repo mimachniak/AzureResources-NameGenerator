@@ -89,20 +89,135 @@ Get-AzResourcesListGenerator
 
 ```
 
-### Ouput for function example 
+### Ouput for function example for listing resources
 
 ```powershell
 
-Using default WEB data source for resource types, defined in this repo: https://github.com/mspnp/AzureNamingTool
-AnalysisServices/servers
-ApiManagement/service
-ApiManagement/service/api-version-sets
-ApiManagement/service/apis
-ApiManagement/service/apis/issues
-ApiManagement/service/apis/issues/attachments
-ApiManagement/service/apis/issues/comments
-ApiManagement/service/apis/operations
+id                           : 328
+resource                     : Web/serverfarms
+optional                     : UnitDept
+exclude                      : Org,Function
+property                     : 
+ShortName                    : asp
+scope                        : resource group
+lengthMin                    : 1
+lengthMax                    : 40
+validText                    : Alphanumerics and hyphens.
+invalidText                  : 
+invalidCharacters            : 
+invalidCharactersStart       : 
+invalidCharactersEnd         : 
+invalidCharactersConsecutive : 
+regx                         : ^[a-zA-Z0-9-]{1,40}$
+staticValues                 : 
 
+id                           : 329
+resource                     : Web/sites
+optional                     : UnitDept
+exclude                      : Org,Function
+property                     : Static Web App
+ShortName                    : stapp
+scope                        : global
+lengthMin                    : 2
+lengthMax                    : 60
+validText                    : Contains alphanumerics and hyphens.
+invalidText                  : Can't start or end with hyphen.
+invalidCharacters            : 
+invalidCharactersStart       : -
+invalidCharactersEnd         : -
+invalidCharactersConsecutive : 
+regx                         : ^[a-zA-Z0-9][a-zA-Z0-9-]{0,58}[a-zA-Z0-9]$
+staticValues                 : 
+
+id                           : 330
+resource                     : Web/sites
+optional                     : UnitDept
+exclude                      : Org,Function
+property                     : Web App
+ShortName                    : app
+scope                        : global
+lengthMin                    : 2
+lengthMax                    : 60
+validText                    : Contains alphanumerics and hyphens.
+invalidText                  : Can't start or end with hyphen.
+invalidCharacters            : 
+invalidCharactersStart       : -
+invalidCharactersEnd         : -
+invalidCharactersConsecutive : 
+regx                         : ^[a-zA-Z0-9][a-zA-Z0-9-]{0,58}[a-zA-Z0-9]$
+staticValues                 : 
+
+id                           : 331
+resource                     : Web/sites
+optional                     : UnitDept
+exclude                      : Org,Function
+property                     : Function App
+ShortName                    : func
+scope                        : global
+lengthMin                    : 2
+lengthMax                    : 60
+validText                    : Contains alphanumerics and hyphens.
+invalidText                  : Can't start or end with hyphen.
+invalidCharacters            : 
+invalidCharactersStart       : -
+invalidCharactersEnd         : -
+invalidCharactersConsecutive : 
+regx                         : ^[a-zA-Z0-9][a-zA-Z0-9-]{0,58}[a-zA-Z0-9]$
+staticValues                 : 
+
+id                           : 332
+resource                     : Web/sites
+optional                     : UnitDept
+exclude                      : Org,Function
+property                     : App Service Environment
+ShortName                    : ase
+scope                        : global
+lengthMin                    : 2
+lengthMax                    : 60
+validText                    : Contains alphanumerics and hyphens.
+invalidText                  : Can't start or end with hyphen.
+invalidCharacters            : 
+invalidCharactersStart       : -
+invalidCharactersEnd         : -
+invalidCharactersConsecutive : 
+regx                         : ^[a-zA-Z0-9][a-zA-Z0-9-]{0,58}[a-zA-Z0-9]$
+staticValues                 : 
+
+id                           : 333
+resource                     : Web/sites
+optional                     : UnitDept
+exclude                      : Org,Function
+property                     : Azure Static Web Apps
+ShortName                    : aswba
+scope                        : global
+lengthMin                    : 2
+lengthMax                    : 60
+validText                    : Contains alphanumerics and hyphens.
+invalidText                  : Can't start or end with hyphen.
+invalidCharacters            : 
+invalidCharactersStart       : -
+invalidCharactersEnd         : -
+invalidCharactersConsecutive : 
+regx                         : ^[a-zA-Z0-9][a-zA-Z0-9-]{0,58}[a-zA-Z0-9]$
+staticValues                 : 
+
+id                           : 334
+resource                     : Web/sites/slots
+optional                     : UnitDept
+exclude                      : Org,Function
+property                     : 
+ShortName                    : slot
+scope                        : site
+lengthMin                    : 2
+lengthMax                    : 60
+validText                    : Alphanumerics and hyphens.
+invalidText                  : 
+invalidCharacters            : 
+invalidCharactersStart       : 
+invalidCharactersEnd         : 
+invalidCharactersConsecutive : 
+regx                         : ^[a-zA-Z0-9-]{2,60}$
+staticValues                 : 
 
 ```
 
@@ -211,21 +326,75 @@ environment-uniqueidentifier-regionName-abbreviation-number
 
 ```powershell
 
-Generated resource Storage/storageAccounts name base on schema and transformation: Prod-MARK@-WEu-stvm-01
-Resource name: prodmarkweustvm01 # remove characters that are not allowed
-Generated resource Storage/storageAccounts name base on schema and transformation: Prod-MARK@-WEu-st-01
-Resource name: prodmarkweust01 # remove characters that are not allowed
-Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-stapp-01
-Resource name: Prod-MARK-WEu-stapp-01 # remove characters that are not allowed
-Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-app-01
-Resource name: Prod-MARK-WEu-app-01 # remove characters that are not allowed
-Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-func-01
-Resource name: Prod-MARK-WEu-func-01 # remove characters that are not allowed
-Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-ase-01
-Resource name: Prod-MARK-WEu-ase-01 # remove characters that are not allowed
-Generated resource Web/sites name base on schema and transformation: Prod-MARK@-WEu-aswba-01
-Resource name: Prod-MARK-WEu-aswba-01 # remove characters that are not allowed
-Generated resource Subscription/subscriptions name base on schema and transformation: Prod-MARK@-WEu-subcr-01
+resourceTypeName      : Storage/storageAccounts
+regionName            : West Europe
+uniqueidentifier      : MARK
+environment           : Prod
+abbreviation          : stvm
+number                : 1
+SchemaPattern         : environment-uniqueidentifier-regionName-abbreviation-number
+resourceNameGenerated : prodmarkweustvm01
+removedChars          : ----
+
+resourceTypeName      : Storage/storageAccounts
+regionName            : West Europe
+uniqueidentifier      : MARK
+environment           : Prod
+abbreviation          : st
+number                : 1
+SchemaPattern         : environment-uniqueidentifier-regionName-abbreviation-number
+resourceNameGenerated : prodmarkweust01
+removedChars          : ----
+
+resourceTypeName      : Web/sites
+regionName            : West Europe
+uniqueidentifier      : MARK
+environment           : Prod
+abbreviation          : stapp
+number                : 1
+SchemaPattern         : environment-uniqueidentifier-regionName-abbreviation-number
+resourceNameGenerated : prod-mark-weu-stapp-01
+removedChars          : 
+
+resourceTypeName      : Web/sites
+regionName            : West Europe
+uniqueidentifier      : MARK
+environment           : Prod
+abbreviation          : app
+number                : 1
+SchemaPattern         : environment-uniqueidentifier-regionName-abbreviation-number
+resourceNameGenerated : prod-mark-weu-app-01
+removedChars          : 
+
+resourceTypeName      : Web/sites
+regionName            : West Europe
+uniqueidentifier      : MARK
+environment           : Prod
+abbreviation          : func
+number                : 1
+SchemaPattern         : environment-uniqueidentifier-regionName-abbreviation-number
+resourceNameGenerated : prod-mark-weu-func-01
+removedChars          : 
+
+resourceTypeName      : Web/sites
+regionName            : West Europe
+uniqueidentifier      : MARK
+environment           : Prod
+abbreviation          : ase
+number                : 1
+SchemaPattern         : environment-uniqueidentifier-regionName-abbreviation-number
+resourceNameGenerated : prod-mark-weu-ase-01
+removedChars          : 
+
+resourceTypeName      : Web/sites
+regionName            : West Europe
+uniqueidentifier      : MARK
+environment           : Prod
+abbreviation          : aswba
+number                : 1
+SchemaPattern         : environment-uniqueidentifier-regionName-abbreviation-number
+resourceNameGenerated : prod-mark-weu-aswba-01
+removedChars          : 
 
 ```
 
