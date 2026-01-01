@@ -38,11 +38,11 @@ function New-AzResourceNameGenerator {
 
     New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites", "Subscription/subscriptions") -regionName "West Europe" -uniqueidentifier MARK@ -number 1 -separator "-"
     New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true
-
+    New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true -bicepFileGeneration -bicepFileType Static -bicepFileOutputPath c:\temp
 
 #>
 
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'NoBicep')]
 param(
 
     [Parameter(Mandatory = $true, HelpMessage = "Specify the environment in which the resource will be used (e.g., Dev, Test, Prod).")]
@@ -74,7 +74,28 @@ param(
 
 
     [Parameter(HelpMessage = "Use default settings to load resource schema from web.")]
-    [string]$ResourcesData = "https://raw.githubusercontent.com/mspnp/AzureNamingTool/refs/heads/main/src/repository/resourcetypes.json"
+    [string]$ResourcesData = "https://raw.githubusercontent.com/mspnp/AzureNamingTool/refs/heads/main/src/repository/resourcetypes.json",
+
+    [Parameter(
+        HelpMessage = "Enable Bicep file generation for the resources.",
+        ParameterSetName = 'Bicep'
+    )]
+    [switch]$bicepFileGeneration,
+
+    [Parameter(
+        HelpMessage = "Type of name generation: Dynamic or Static for bicep generation.",
+        ParameterSetName = 'Bicep'
+    )]
+    [ValidateSet("Dynamic", "Static")]
+    [string]$bicepFileType = "Dynamic",
+
+    [Parameter(
+        Mandatory = $true,
+        HelpMessage = "Path where the Bicep files will be generated.",
+        ParameterSetName = 'Bicep'
+    )]
+    [ValidateNotNullOrEmpty()]
+    [string]$bicepFileOutputPath
 
     )
 
@@ -210,6 +231,7 @@ param(
     }
 
     $resourceOutput = @()
+    $resourceBicep = @()
 
     # check there is data in response for schema
     if ($ResourceNameSchema -match '^(http://|https://|ftp://)') {
@@ -282,11 +304,11 @@ param(
             # to lower case if switch is set
                 if ($convertTolower) {
                     $finalResourceName = ($resourceNameParts -join $separator).ToLower()
-                    Write-Output  "Generated resource $($resourceTypeName) name base on schema and transformation: $($finalResourceName)"
+                    Write-Verbose  "Generated resource $($resourceTypeName) name base on schema and transformation: $($finalResourceName)"
 
                 }   else {
                     $finalResourceName = $resourceNameParts -join $separator
-                    Write-Output  "Generated resource $($resourceTypeName) name base on schema and transformation: $($finalResourceName)"
+                    Write-Verbose  "Generated resource $($resourceTypeName) name base on schema and transformation: $($finalResourceName)"
                 }
             # Validate and sanitize resource name based on regex from resource definition
 
@@ -315,6 +337,19 @@ param(
                         environment      = $environment
                         abbreviation     = $resource.ShortName
                         number           = $number
+                        SchemaPattern = $generalSchemaPattern
+                        resourceNameGenerated     = $result.Sanitized
+                        removedChars     = $result.RemovedChars
+                    }
+
+                $resourceBicep += [PSCustomObject]@{
+                        resourceTypeName = $resourceTypeName
+                        regionName       = $regionName
+                        uniqueidentifier = $uniqueidentifier
+                        environment      = $environment
+                        abbreviation     = $resource.ShortName
+                        number           = $number
+                        SchemaPattern = $generalSchemaPattern
                         resourceNameGenerated     = $result.Sanitized
                         removedChars     = $result.RemovedChars
                     }
@@ -328,8 +363,31 @@ param(
         } # foreach end resourceTypeNames
 
             $resourceOutput
+            $attributeValue
+
+         ### bicep file generation can be added here in future ###
+            if ($PSCmdlet.ParameterSetName -eq 'Bicep') {
+                Write-Host "Bicep generation enabled"
+                Write-Host "Output path: $bicepFileOutputPath"
+                if ($bicepFileType -eq "Dynamic") {
+                    Write-Host "Bicep file type: Dynamic"
+
+                } elseif ($bicepFileType -eq "Static") {
+
+                    Write-Host "Bicep file type: Static"
+
+                    foreach ($bicepResource in $resourceBicep) {
+                        
 
 
+                    }
+
+                }
+            }
+            else {
+                Write-Host "Bicep generation disabled"
+            }
+        
     } # else end respond is true
 
 
