@@ -242,7 +242,7 @@ New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/stora
 
 # Generate bicepparam file with extendableParamFiles feature and dynamic name
 
-New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true -bicepFileGeneration -bicepFileType Dynamic -bicepFileOutputPath c:\temp\output_dynamic.bicep
+New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true -bicepFileGeneration -bicepFileType Dynamic -bicepFileOutputPath c:\temp\output_dynamic.bicepparam
 
 ```
 

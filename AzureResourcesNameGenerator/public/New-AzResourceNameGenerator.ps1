@@ -29,6 +29,13 @@ function New-AzResourceNameGenerator {
     Path to the resource scheama JSON file that defines general naming convention.
 .PARAMETER ResourcesData
     Use default settings to load resource schema from web in JSON format.
+
+.PARAMETER bicepFileGeneration
+    A switch to enable Bicep file generation for the resources.
+.PARAMETER bicepFileType
+    Type of name generation: Dynamic or Static for bicep generation. Static will create variables for each resource with generated name, Dynamic will use parameters and concat function.
+.PARAMETER bicepFileOutputPath
+    Path where the Bicep files will be generated.
 .EXAMPLE
     New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites", "Subscription/subscriptions") -regionName "West Europe" -uniqueidentifier MARK@ -number 1 -separator "-"
     New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true
@@ -369,7 +376,6 @@ param(
          ### bicep file generation can be added here in future ###
             if ($PSCmdlet.ParameterSetName -eq 'Bicep') {
                 Write-Host "Bicep generation enabled"
-                Write-Host "Output path: $bicepFileOutputPath"
 
                 $resourceOutputBicep = @()
 
@@ -382,14 +388,17 @@ param(
 
                     
 
-                    if ($bicepFileOutputPath.Extension -ieq ".bicep") {
-                        $bicepFileOutputPath = [IO.Path]::ChangeExtension($bicepFileOutputPath.FullName, ".bicepparam")
+                    if ($bicepFileOutputPath -like "*.bicep") {
+                        $bicepFileOutputPath = $bicepFileOutputPath -replace ".bicep", ".bicepparam"
+                        Write-Verbose "File extension changed to: $bicepFileOutputPath"
                     }
                     if (-not (Test-Path $bicepFileOutputPath)) {                       
                         New-Item -Path $bicepFileOutputPath -ItemType File -Force | Out-Null
 
                         $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Force
                     }
+
+                    Write-Host "Output path: $bicepFileOutputPath"
 
                 } elseif ($bicepFileType -eq "Static") {
 
@@ -410,7 +419,7 @@ param(
 
                         $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Force
                     }
-
+                    Write-Host "Output path: $bicepFileOutputPath"
                 }
             }
             else {
