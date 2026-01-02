@@ -446,7 +446,7 @@ param(
                         $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Force
                     }
 
-                    Write-Output "Output path: $bicepFileOutputPath"
+                    Write-Output "Output path for bicep file generated: $bicepFileOutputPath"
 
                 } elseif ($bicepFileType -eq "Static") {
 
@@ -467,7 +467,7 @@ param(
 
                         $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Force
                     }
-                    Write-Host "Output path: $bicepFileOutputPath"
+                    Write-Output "Output path for bicep file generated: $bicepFileOutputPath"
                 }
             }
             else {
