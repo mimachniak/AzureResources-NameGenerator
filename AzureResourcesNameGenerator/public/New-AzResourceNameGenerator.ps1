@@ -370,9 +370,6 @@ param(
     
         } # foreach end resourceTypeNames
 
-            $resourceOutput
-
-            $resourceOutput | Export-Csv "C:\temp\output.csv" -NoTypeInformation -Force
 
          ### bicep file generation can be added here in future ###
             if ($PSCmdlet.ParameterSetName -eq 'Bicep') {
@@ -418,6 +415,8 @@ param(
                             
                         }
                         $resourceTypeNameBicep = ($bicepResource.resourceTypeName).Split('/')[-1]
+
+                        ### Adding condition to check if regex is null or empty to avoid issues with matching
 
                         if ($generalSchemaPattern.Trim() -match $bicepResource.regex.Trim()){
                             $resoucePartsSchema = $resoucePartsSchema -join $separator
