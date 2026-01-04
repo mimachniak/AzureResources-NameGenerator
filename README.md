@@ -20,6 +20,7 @@
    - [Example of Json file with naming schema](#Example-of-Json-file-with-naming-schema)
    - [Example of schema for resources base on json file ](#Example-of-schema-for-resources-base-on-json-file)
    - [Output resources names ](#Output-resources-names)
+   - [Output resources in bicep files names:] (#Output-resources-in-bicep-files-names)
 - [Limitations](#limitations)
 - [Features](#features)
 
@@ -403,6 +404,65 @@ number                : 1
 SchemaPattern         : environment-uniqueidentifier-regionName-abbreviation-number
 resourceNameGenerated : prod-mark-weu-aswba-01
 removedChars          : 
+
+```
+
+### Output resources in bicep files names:  
+
+#### Static 
+
+Static is using @export() decorater and can be imported, @export support only static value.
+
+```bicep
+
+@export()
+var storageAccounts_stvm_1 = 'prodmarkweustvm01'
+
+@export()
+var storageAccounts_st_1 = 'prodmarkweust01'
+
+@export()
+var sites_stapp_1 = 'prod-mark-weu-stapp-01'
+
+@export()
+var sites_app_1 = 'prod-mark-weu-app-01'
+
+@export()
+var sites_func_1 = 'prod-mark-weu-func-01'
+
+@export()
+var sites_ase_1 = 'prod-mark-weu-ase-01'
+
+@export()
+var sites_aswba_1 = 'prod-mark-weu-aswba-01'
+
+
+```
+
+#### Dynamic
+
+Dynamic is integreted with extended bicepparm feature. 
+
+```bicep
+
+using none
+
+param environment = 'Prod'
+
+param uniqueidentifier = 'MARK'
+
+param regionName = 'WEu'
+
+param number = '01'
+
+param storageAccounts_stvm_1 = '${environment}${uniqueidentifier}${regionName}stvm${number}'
+param storageAccounts_st_1 = '${environment}${uniqueidentifier}${regionName}st${number}'
+param sites_stapp_1 = '${environment}-${uniqueidentifier}-${regionName}-stapp-${number}'
+param sites_app_1 = '${environment}-${uniqueidentifier}-${regionName}-app-${number}'
+param sites_func_1 = '${environment}-${uniqueidentifier}-${regionName}-func-${number}'
+param sites_ase_1 = '${environment}-${uniqueidentifier}-${regionName}-ase-${number}'
+param sites_aswba_1 = '${environment}-${uniqueidentifier}-${regionName}-aswba-${number}'
+
 
 ```
 
