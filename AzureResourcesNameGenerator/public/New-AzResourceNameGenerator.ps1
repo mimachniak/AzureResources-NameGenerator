@@ -398,9 +398,12 @@ param(
                         if (($attributeValue.length -gt $length) -and ($transformation -eq $false)) {
                         $attributeValue = $attributeValue.Substring(0, $length)
                         }
+                        if ($attribute.name -ne "abbreviation") {
+                            $resourceOutputBicep += "param $($attribute.name) = '$attributeValue'"
+                            $resourceOutputBicep += ""
 
-                        $resourceOutputBicep += "param $($attribute.name) = '$attributeValue'"
-                        $resourceOutputBicep += ""
+                        }  
+
                     }
                     
 
