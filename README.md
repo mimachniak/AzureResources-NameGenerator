@@ -477,7 +477,6 @@ param sites_aswba_1 = '${environment}-${uniqueidentifier}-${regionName}-aswba-${
     - Integrate with Azure CLI or PowerShell Az module to validate names against existing resources.
     - Implement unit tests to validate the naming logic.
     - Create a GUI for easier input of parameters.
-    - Allow exporting the generated names to a file or clipboard.
     - Add option to use separator or not based on resource type.
     - Custom schema for different resource types.
     - Add support for more complex naming conventions.
@@ -485,7 +484,5 @@ param sites_aswba_1 = '${environment}-${uniqueidentifier}-${regionName}-aswba-${
     - Add interactive mode for user input.
     - Add corelation between resources (e.g., VM and its associated resources).
     - Convert to module for easier reuse.
-    - Export to bicep or ARM template.
-    - Generated bicpe variables for resource names.
 
 
