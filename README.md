@@ -411,7 +411,7 @@ removedChars          :
 
 #### Static 
 
-Static is using @export() decorater and can be imported, @export support only static value.
+Static is using @export() decorator and can be imported to bicep files, @export support only static value.
 
 ```bicep
 
