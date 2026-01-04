@@ -29,6 +29,12 @@ function New-AzResourceNameGenerator {
     Path to the resource scheama JSON file that defines general naming convention.
 .PARAMETER ResourcesData
     Use default settings to load resource schema from web in JSON format.
+.PARAMETER bicepFileGeneration
+    A switch to enable Bicep file generation for the resources.
+.PARAMETER bicepFileType
+    Type of name generation: Dynamic or Static for bicep generation. Static will create variables for each resource with generated name, Dynamic will use parameters and concat function.
+.PARAMETER bicepFileOutputPath
+    Path where the Bicep files will be generated.
 .EXAMPLE
     New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites", "Subscription/subscriptions") -regionName "West Europe" -uniqueidentifier MARK@ -number 1 -separator "-"
     New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true
@@ -39,6 +45,7 @@ function New-AzResourceNameGenerator {
     New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites", "Subscription/subscriptions") -regionName "West Europe" -uniqueidentifier MARK@ -number 1 -separator "-"
     New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true
     New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true -bicepFileGeneration -bicepFileType Static -bicepFileOutputPath c:\temp
+    New-AzResourceNameGenerator -environment Prod -resourceTypeName @("Storage/storageAccounts", "Web/sites") -regionName "West Europe" -uniqueidentifier MARK -number 1 -separator "-" -convertTolower $true -bicepFileGeneration -bicepFileType Dynamic -bicepFileOutputPath c:\temp\output_dynamic.bicepparam
 
 #>
 
@@ -337,6 +344,7 @@ param(
                         environment      = $environment
                         abbreviation     = $resource.ShortName
                         number           = $number
+                        regex            = $regex
                         SchemaPattern = $generalSchemaPattern
                         resourceNameGenerated     = $result.Sanitized
                         removedChars     = $result.RemovedChars
@@ -362,25 +370,78 @@ param(
     
         } # foreach end resourceTypeNames
 
-            $resourceOutput
-
-            $resourceOutput | Export-Csv "C:\temp\output.csv" -NoTypeInformation -Force
 
          ### bicep file generation can be added here in future ###
             if ($PSCmdlet.ParameterSetName -eq 'Bicep') {
-                Write-Host "Bicep generation enabled"
-                Write-Host "Output path: $bicepFileOutputPath"
+                Write-Host "Bicep generation enabled - generating Bicep file at: $bicepFileOutputPath"
 
                 $resourceOutputBicep = @()
 
                 if ($bicepFileType -eq "Dynamic") {
-                    Write-Host "Bicep file type: Dynamic"
+                    Write-Output "Bicep file type: Dynamic in path: $bicepFileOutputPath"
 
                     $resourceOutputBicep += "using none"
                     $resourceOutputBicep += ""
 
-                    if ($bicepFileOutputPath.Extension -ieq ".bicep") {
-                        $bicepFileOutputPath = [IO.Path]::ChangeExtension($bicepFileOutputPath.FullName, ".bicepparam")
+                    $resourceNameParts = foreach ($attribute in $generalNamingSchema) {
+                
+                    $name   = $attribute.name
+                    $attributeValue = $mappingTable[$name]
+                    $length    = [int]$attribute.length
+                    $transformation = [bool]$attribute.transformation
+
+                        if ($transformation -eq $true -and $attribute.transformationRegex.pattern -ne $null -and $attribute.transformationRegex.replacement -ne $null) {
+                            $attributeValue = [regex]::Replace($attributeValue, $attribute.transformationRegex.pattern, $attribute.transformationRegex.replacement)
+                        } 
+
+                        # Truncate to limit and don't transform just substring
+                        if (($attributeValue.length -gt $length) -and ($transformation -eq $false)) {
+                        $attributeValue = $attributeValue.Substring(0, $length)
+                        }
+                        if ($attribute.name -ne "abbreviation") {
+                            $resourceOutputBicep += "param $($attribute.name) = '$attributeValue'"
+                            $resourceOutputBicep += ""
+
+                        }  
+
+                    }
+                    
+
+                    foreach ($bicepResource in $resourceOutput) {
+                        $generalNamingSchemaParts = $generalSchemaPattern -split $separator
+                        $resoucePartsSchema = @()
+                        foreach ($schemaPart in $generalNamingSchemaParts) {
+                            
+                            $schemaPart = '${'+$schemaPart+'}'
+                            $resoucePartsSchema += $schemaPart
+
+                            
+                        }
+                        $resourceTypeNameBicep = ($bicepResource.resourceTypeName).Split('/')[-1]
+
+                        ### Adding condition to check if regex is null or empty to avoid issues with matching
+
+                        if ($generalSchemaPattern.Trim() -match $bicepResource.regex.Trim()){
+                            $resoucePartsSchema = $resoucePartsSchema -join $separator
+                            $resoucePartsSchema = $resoucePartsSchema.Replace('${abbreviation}', "$($bicepResource.abbreviation)")
+
+                            $resourceOutputBicep += "param $($resourceTypeNameBicep)_$($bicepResource.abbreviation)_$($bicepResource.number) = '$resoucePartsSchema'"
+
+
+                        } else {
+                            $resoucePartsSchema = $resoucePartsSchema -join ""
+                            $resoucePartsSchema = $resoucePartsSchema.Replace('${abbreviation}', "$($bicepResource.abbreviation)")
+
+                            $resourceOutputBicep += "param $($resourceTypeNameBicep)_$($bicepResource.abbreviation)_$($bicepResource.number) = '$resoucePartsSchema'"
+                        }
+
+
+                    }
+
+
+                    if ($bicepFileOutputPath -like "*.bicep") {
+                        $bicepFileOutputPath = $bicepFileOutputPath -replace ".bicep", ".bicepparam"
+                        Write-Verbose "File extension changed to: $bicepFileOutputPath"
                     }
                     if (-not (Test-Path $bicepFileOutputPath)) {                       
                         New-Item -Path $bicepFileOutputPath -ItemType File -Force | Out-Null
@@ -388,9 +449,11 @@ param(
                         $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Force
                     }
 
+                    Write-Output "Output path for bicep file generated: $bicepFileOutputPath"
+
                 } elseif ($bicepFileType -eq "Static") {
 
-                    Write-Host "Bicep file type: Static"
+                    Write-Output "Bicep file type: Static in path: $bicepFileOutputPath"
 
                     foreach ($bicepResource in $resourceOutput) {
                         
@@ -407,7 +470,7 @@ param(
 
                         $resourceOutputBicep | Out-File  "$bicepFileOutputPath" -Force
                     }
-
+                    Write-Output "Output path for bicep file generated: $bicepFileOutputPath"
                 }
             }
             else {

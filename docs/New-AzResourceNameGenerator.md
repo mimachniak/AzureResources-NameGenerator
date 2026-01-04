@@ -40,3 +40,9 @@ Azure Resource Naming Convention Generator, This script generates Azure resource
     Path to the resource scheama JSON file that defines general naming convention. Cane be web o local path
 ### -ResourcesData {String}
     Use default settings to load resource schema from web in JSON format. Default URL: 
+### -bicepFileGeneration
+    A switch to enable Bicep file generation for the resources.
+### -bicepFileType
+    Type of name generation: Dynamic or Static for bicep generation. Static will create variables for each resource with generated name, Dynamic will use parameters and concat function.
+### -bicepFileOutputPath
+    Path where the Bicep files will be generated.
