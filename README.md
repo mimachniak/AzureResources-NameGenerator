@@ -20,7 +20,7 @@
    - [Example of Json file with naming schema](#Example-of-Json-file-with-naming-schema)
    - [Example of schema for resources base on json file ](#Example-of-schema-for-resources-base-on-json-file)
    - [Output resources names ](#Output-resources-names)
-   - [Output resources in bicep files names:] (#Output-resources-in-bicep-files-names)
+   - [Output resources in bicep files names:](#Output-resources-in-bicep-files-names)
 - [Limitations](#limitations)
 - [Features](#features)
 
