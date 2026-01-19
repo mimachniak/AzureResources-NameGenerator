@@ -4,6 +4,7 @@
 ![PowerShell Gallery](https://img.shields.io/powershellgallery/v/AzureResourcesNameGenerator.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-PowerShell%207%2B-lightgrey)
+![Downloads](https://img.shields.io/powershellgallery/dt/AzureResourcesNameGenerator)
 
 ---
 
