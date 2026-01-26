@@ -3,7 +3,7 @@
     RootModule = 'AzureResourcesNameGenerator.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.3'
+    ModuleVersion = '1.0.4'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop', 'Core')
@@ -48,6 +48,8 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = '
+            v.1.0.4
+                - Fix output for piplines
             v.1.0.3
                 - Add output to PS Custom object with generated name and details.
                 - Add bicep parameter to generate bicep variable declaration.
