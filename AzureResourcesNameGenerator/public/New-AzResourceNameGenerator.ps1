@@ -369,7 +369,10 @@ param(
             } # foreach end resource in resourceTypeName
     
         } # foreach end resourceTypeNames
+        
+        Write-Verbose "Generating resource names :"
 
+        [PSCustomObject]$resourceOutput
 
          ### bicep file generation can be added here in future ###
             if ($PSCmdlet.ParameterSetName -eq 'Bicep') {
