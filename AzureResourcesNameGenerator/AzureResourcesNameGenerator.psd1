@@ -30,7 +30,7 @@
     FunctionsToExport = @('*')
 
     # Cmdlets to export from this module
-    CmdletsToExport = @('New-AzResourceNameGenerator','Get-AzResourcesListGenerator')
+    CmdletsToExport = @('New-AzResourceNameGenerator','Get-AzResourcesListGenerator','New-AzResourceNameGeneratorGUI')
 
     # Variables to export from this module
     VariablesToExport = @()
