@@ -486,6 +486,63 @@ function New-AzResourceNameGeneratorGUI {
 
     $tabSettings.Controls.Add($groupFileSettings)
 
+    # Create GroupBox for Bicep settings
+    $groupBicepSettings = New-Object System.Windows.Forms.GroupBox
+    $groupBicepSettings.Text = "Bicep Export"
+    $groupBicepSettings.Location = New-Object System.Drawing.Point(10, 370)
+    $groupBicepSettings.Size = New-Object System.Drawing.Size(940, 170)
+    $groupBicepSettings.Padding = New-Object System.Windows.Forms.Padding(10)
+
+    # Enable Bicep Export checkbox
+    $checkBicepExport = New-Object System.Windows.Forms.CheckBox
+    $checkBicepExport.Text = "Enable Bicep Export"
+    $checkBicepExport.Location = New-Object System.Drawing.Point(10, 25)
+    $checkBicepExport.AutoSize = $true
+    $checkBicepExport.Checked = $false
+    $groupBicepSettings.Controls.Add($checkBicepExport)
+
+    # Bicep File Type
+    $labelBicepType = New-Object System.Windows.Forms.Label
+    $labelBicepType.Text = "Bicep File Type:"
+    $labelBicepType.Location = New-Object System.Drawing.Point(10, 55)
+    $labelBicepType.AutoSize = $true
+    $groupBicepSettings.Controls.Add($labelBicepType)
+
+    $comboBicepType = New-Object System.Windows.Forms.ComboBox
+    $comboBicepType.Location = New-Object System.Drawing.Point(150, 52)
+    $comboBicepType.Width = 200
+    $comboBicepType.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+    [void]$comboBicepType.Items.Add("Dynamic")
+    [void]$comboBicepType.Items.Add("Static")
+    $comboBicepType.SelectedIndex = 0
+    $comboBicepType.Enabled = $false
+    $groupBicepSettings.Controls.Add($comboBicepType)
+
+    # Bicep Output Path
+    $labelBicepOutput = New-Object System.Windows.Forms.Label
+    $labelBicepOutput.Text = "Bicep Output Path:"
+    $labelBicepOutput.Location = New-Object System.Drawing.Point(10, 90)
+    $labelBicepOutput.AutoSize = $true
+    $groupBicepSettings.Controls.Add($labelBicepOutput)
+
+    $textBicepOutput = New-Object System.Windows.Forms.TextBox
+    $textBicepOutput.Location = New-Object System.Drawing.Point(10, 115)
+    $textBicepOutput.Width = 650
+    $textBicepOutput.Height = 30
+    $textBicepOutput.ReadOnly = $true
+    $textBicepOutput.Enabled = $false
+    $groupBicepSettings.Controls.Add($textBicepOutput)
+
+    $buttonBrowseBicepOutput = New-Object System.Windows.Forms.Button
+    $buttonBrowseBicepOutput.Text = "Browse..."
+    $buttonBrowseBicepOutput.Location = New-Object System.Drawing.Point(670, 112)
+    $buttonBrowseBicepOutput.Width = 120
+    $buttonBrowseBicepOutput.Height = 25
+    $buttonBrowseBicepOutput.Enabled = $false
+    $groupBicepSettings.Controls.Add($buttonBrowseBicepOutput)
+
+    $tabSettings.Controls.Add($groupBicepSettings)
+
     $tabControl.TabPages.Add($tabParameters)
     $tabControl.TabPages.Add($tabResources)
     $tabControl.TabPages.Add($tabSettings)
@@ -523,10 +580,19 @@ function New-AzResourceNameGeneratorGUI {
     $buttonExport.Enabled = $false
     $buttonPanel.Controls.Add($buttonExport)
 
+    # Export Bicep Button
+    $buttonExportBicep = New-Object System.Windows.Forms.Button
+    $buttonExportBicep.Text = "Export to Bicep"
+    $buttonExportBicep.Location = New-Object System.Drawing.Point(490, 10)
+    $buttonExportBicep.Width = 150
+    $buttonExportBicep.Height = 40
+    $buttonExportBicep.Enabled = $false
+    $buttonPanel.Controls.Add($buttonExportBicep)
+
     # Close Button
     $buttonClose = New-Object System.Windows.Forms.Button
     $buttonClose.Text = "Close"
-    $buttonClose.Location = New-Object System.Drawing.Point(490, 10)
+    $buttonClose.Location = New-Object System.Drawing.Point(650, 10)
     $buttonClose.Width = 150
     $buttonClose.Height = 40
     $buttonPanel.Controls.Add($buttonClose)
@@ -626,6 +692,7 @@ function New-AzResourceNameGeneratorGUI {
                 # Enable export buttons
                 $buttonCopy.Enabled = $true
                 $buttonExport.Enabled = $true
+                $buttonExportBicep.Enabled = $checkBicepExport.Checked
 
                 # Switch to Results tab
                 $tabControl.SelectedIndex = 2
@@ -695,6 +762,101 @@ function New-AzResourceNameGeneratorGUI {
             catch {
                 [System.Windows.Forms.MessageBox]::Show("Error exporting results:`n`n$($_.Exception.Message)", "Export Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
             }
+        }
+    })
+
+    # Bicep settings events
+    $checkBicepExport.Add_CheckedChanged({
+        $comboBicepType.Enabled = $checkBicepExport.Checked
+        $textBicepOutput.Enabled = $checkBicepExport.Checked
+        $buttonBrowseBicepOutput.Enabled = $checkBicepExport.Checked
+        $buttonExportBicep.Enabled = ($checkBicepExport.Checked -and $dataGridResults.Rows.Count -gt 0)
+    })
+
+    $buttonBrowseBicepOutput.Add_Click({
+        $saveDialog = New-Object System.Windows.Forms.SaveFileDialog
+        if ($comboBicepType.SelectedItem -eq "Dynamic") {
+            $saveDialog.Filter = "Bicep Params (*.bicepparam)|*.bicepparam|Bicep Files (*.bicep)|*.bicep|All Files (*.*)|*.*"
+            $saveDialog.DefaultExt = "bicepparam"
+        }
+        else {
+            $saveDialog.Filter = "Bicep Files (*.bicep)|*.bicep|All Files (*.*)|*.*"
+            $saveDialog.DefaultExt = "bicep"
+        }
+
+        if ($saveDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+            $textBicepOutput.Text = $saveDialog.FileName
+        }
+    })
+
+    # Export to Bicep button click event
+    $buttonExportBicep.Add_Click({
+        $selectedResources = @($listBoxResources.SelectedItems | ForEach-Object { $_ })
+
+        if ($selectedResources.Count -eq 0) {
+            [System.Windows.Forms.MessageBox]::Show("Please select at least one resource type.", "No Resources Selected", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+            return
+        }
+
+        if (-not $checkBicepExport.Checked) {
+            [System.Windows.Forms.MessageBox]::Show("Enable Bicep Export in Settings to continue.", "Bicep Export Disabled", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+            return
+        }
+
+        # Validate parameters
+        if ([string]::IsNullOrWhiteSpace($textEnvironment.Text)) {
+            [System.Windows.Forms.MessageBox]::Show("Environment is required.", "Missing Parameter", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+            return
+        }
+
+        if ([string]::IsNullOrWhiteSpace($textRegion.Text)) {
+            [System.Windows.Forms.MessageBox]::Show("Region is required.", "Missing Parameter", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+            return
+        }
+
+        if ([string]::IsNullOrWhiteSpace($textUniqueId.Text)) {
+            [System.Windows.Forms.MessageBox]::Show("Unique Identifier is required.", "Missing Parameter", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+            return
+        }
+
+        $bicepOutputPath = $textBicepOutput.Text
+        if ([string]::IsNullOrWhiteSpace($bicepOutputPath)) {
+            $saveDialog = New-Object System.Windows.Forms.SaveFileDialog
+            if ($comboBicepType.SelectedItem -eq "Dynamic") {
+                $saveDialog.Filter = "Bicep Params (*.bicepparam)|*.bicepparam|Bicep Files (*.bicep)|*.bicep|All Files (*.*)|*.*"
+                $saveDialog.DefaultExt = "bicepparam"
+            }
+            else {
+                $saveDialog.Filter = "Bicep Files (*.bicep)|*.bicep|All Files (*.*)|*.*"
+                $saveDialog.DefaultExt = "bicep"
+            }
+
+            if ($saveDialog.ShowDialog() -ne [System.Windows.Forms.DialogResult]::OK) {
+                return
+            }
+            $bicepOutputPath = $saveDialog.FileName
+            $textBicepOutput.Text = $bicepOutputPath
+        }
+
+        try {
+            $null = New-AzResourceNameGenerator `
+                -environment $textEnvironment.Text `
+                -resourceTypeNames $selectedResources `
+                -regionName $textRegion.Text `
+                -uniqueidentifier $textUniqueId.Text `
+                -number ([int]$numericNumber.Value) `
+                -separator $textSeparator.Text `
+                -convertTolower $checkLower.Checked `
+                -ResourceNameSchema $ResourceNameSchema `
+                -ResourcesData $ResourcesData `
+                -bicepFileGeneration `
+                -bicepFileType ($comboBicepType.SelectedItem.ToString()) `
+                -bicepFileOutputPath $bicepOutputPath
+
+            [System.Windows.Forms.MessageBox]::Show("Bicep file exported successfully to:`n`n$bicepOutputPath", "Export Successful", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+        }
+        catch {
+            [System.Windows.Forms.MessageBox]::Show("Error exporting Bicep file:`n`n$($_.Exception.Message)", "Export Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
         }
     })
 
