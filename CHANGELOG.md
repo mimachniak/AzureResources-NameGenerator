@@ -11,5 +11,5 @@
 
 ### Added
 
-- Add UI interface for naming creation / export to bicep files
+- Add UI interface for naming creation / export to bicep files with new cmdlet New-AzResourceNameGeneratorGUI.
 

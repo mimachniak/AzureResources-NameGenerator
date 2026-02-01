@@ -36,6 +36,7 @@ The current list of commands implemented in the module:
 
 - [New-AzResourceNameGenerator](./docs/New-AzResourceNameGenerator.md)
 - [Get-AzResourcesListGenerator](./docs/Get-AzResourcesListGenerator.md)  
+- [New-AzResourceNameGeneratorGUI](./docs/New-AzResourceNameGenerator.md)
 
 
 ---

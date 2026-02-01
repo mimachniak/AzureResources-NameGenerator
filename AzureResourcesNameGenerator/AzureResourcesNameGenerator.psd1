@@ -49,7 +49,7 @@
             # ReleaseNotes of this module
             ReleaseNotes = '
             v.1.0.5
-                - Add UI interface for naming creation / export to bicep files
+                - Add UI interface for naming creation / export to bicep files with new cmdlet New-AzResourceNameGeneratorGUI.
             v.1.0.4
                 - Fix output to PS Custom object with generated name and details.
             v.1.0.3
