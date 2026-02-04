@@ -90,8 +90,8 @@ jobs:
               with:
                 name: PSScriptAnalyzerReport
                 path: |
-                                        PSScriptAnalyzerReport.json
-                                        PSScriptAnalyzerReport.nunit.xml
+                        PSScriptAnalyzerReport.json
+                        PSScriptAnalyzerReport.nunit.xml
             - name: Run Pester tests
               shell: pwsh
               run: |
