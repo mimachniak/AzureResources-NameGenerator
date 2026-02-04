@@ -95,12 +95,21 @@ jobs:
             - name: Run Pester tests
               shell: pwsh
               run: |
-                    $ProgressPreference = 'SilentlyContinue'
-                    $ErrorActionPreference = 'Stop'
-                    Install-Module -Name Pester -Scope CurrentUser -MinimumVersion 5.5.0 -Force -Verbose
-                    $resultsPath = Join-Path $env:GITHUB_WORKSPACE 'PesterTestResults.xml'
-                    Invoke-Pester -Path "$env:GITHUB_WORKSPACE/tests" -CI -Output Detailed -OutputFormat NUnitXml -OutputFile $resultsPath
-                    Write-Host "Pester report saved to: $resultsPath"
+                $ProgressPreference = 'SilentlyContinue'
+                $ErrorActionPreference = 'Stop'
+                Install-Module -Name Pester -Scope CurrentUser -MinimumVersion 5.5.0 -Force -Verbose
+                $resultsPath = Join-Path $env:GITHUB_WORKSPACE 'PesterTestResults.xml'
+
+                $config = New-PesterConfiguration
+                $config.Run.Path = "$env:GITHUB_WORKSPACE/tests"
+                $config.Run.Exit = $true
+                $config.Output.Verbosity = 'Detailed'
+                $config.TestResult.Enabled = $true
+                $config.TestResult.OutputFormat = 'NUnitXml'
+                $config.TestResult.OutputPath = $resultsPath
+
+                Invoke-Pester -Configuration $config
+                Write-Host "Pester report saved to: $resultsPath"
             - name: Upload Pester report
               uses: actions/upload-artifact@v4
               with:
