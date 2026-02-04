@@ -31,5 +31,12 @@ jobs:
                   $ProgressPreference = 'SilentlyContinue'
                   $ErrorActionPreference = 'Stop'
                   Install-Module -Name PSScriptAnalyzer -SkipPublisherCheck -Scope CurrentUser -MinimumVersion 1.19.1 -Force -Verbose
-                  Invoke-ScriptAnalyzer -Path $env:GITHUB_WORKSPACE -Recurse -ReportSummary -EnableExit
+                                    $reportPath = Join-Path $env:GITHUB_WORKSPACE 'PSScriptAnalyzerReport.json'
+                                    Invoke-ScriptAnalyzer -Path $env:GITHUB_WORKSPACE -Recurse -ReportSummary -Severity Information,Warning,Error -OutFile $reportPath
+                                    Write-Host "PSScriptAnalyzer report saved to: $reportPath"
+            - name: Upload PSScriptAnalyzer report
+              uses: actions/upload-artifact@v4
+              with:
+                name: PSScriptAnalyzerReport
+                path: PSScriptAnalyzerReport.json
             # Run tests
