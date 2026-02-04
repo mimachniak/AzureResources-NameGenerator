@@ -4,15 +4,43 @@ $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = (Resolve-Path (Join-Path $here '..')).Path
 $modulePath = Join-Path $repoRoot 'AzureResourcesNameGenerator' 'AzureResourcesNameGenerator.psd1'
 $resourcesData = Join-Path $repoRoot 'data' 'resourcetypes.json'
-$testResourcesData = Join-Path $repoRoot 'tests' 'resources' 'resourcetypes-test.json'
 $schemaData = Join-Path $repoRoot 'data' 'general_naming_shema.json'
 
 Import-Module $modulePath -Force
 
 Describe 'Get-AzResourcesListGenerator' {
     Context 'Local test data file' {
+                BeforeAll {
+                        $script:testResourcesData = Join-Path $TestDrive 'resourcetypes-test.json'
+                        @'
+[
+    {
+        "resource": "TypeA",
+        "ShortName": "a",
+        "regx": "^a$",
+        "validText": "",
+        "invalidText": ""
+    },
+    {
+        "resource": "TypeB",
+        "ShortName": "b",
+        "regx": "^b$",
+        "validText": "",
+        "invalidText": ""
+    },
+    {
+        "resource": "TypeA",
+        "ShortName": "a",
+        "regx": "^a$",
+        "validText": "",
+        "invalidText": ""
+    }
+]
+'@ | Set-Content -Path $script:testResourcesData -Encoding utf8
+                }
+
         It 'returns unique resource types when ShowOnlyResourceType is set' {
-            $result = Get-AzResourcesListGenerator -ResourcesData $testResourcesData -ShowOnlyResourceType
+                        $result = Get-AzResourcesListGenerator -ResourcesData $script:testResourcesData -ShowOnlyResourceType
 
             $result | Should -HaveCount 2
             $result.ResourceType | Should -Contain 'TypeA'
@@ -20,7 +48,7 @@ Describe 'Get-AzResourcesListGenerator' {
         }
 
         It 'returns raw objects when no switches are set' {
-            $result = Get-AzResourcesListGenerator -ResourcesData $testResourcesData
+            $result = Get-AzResourcesListGenerator -ResourcesData $script:testResourcesData
 
             $result | Should -HaveCount 3
             $result[0].resource | Should -Be 'TypeA'
