@@ -31,66 +31,65 @@ jobs:
                   $ProgressPreference = 'SilentlyContinue'
                   $ErrorActionPreference = 'Stop'
                   Install-Module -Name PSScriptAnalyzer -SkipPublisherCheck -Scope CurrentUser -MinimumVersion 1.19.1 -Force -Verbose
-                                    $reportPath = Join-Path $env:GITHUB_WORKSPACE 'PSScriptAnalyzerReport.json'
-                                    $nunitPath = Join-Path $env:GITHUB_WORKSPACE 'PSScriptAnalyzerReport.nunit.xml'
-                                    $results = Invoke-ScriptAnalyzer -Path $env:GITHUB_WORKSPACE -Recurse -ReportSummary -Severity Information,Warning,Error
-                                    $results | ConvertTo-Json -Depth 6 | Out-File -FilePath $reportPath -Encoding utf8
+                  $reportPath = Join-Path $env:GITHUB_WORKSPACE 'PSScriptAnalyzerReport.json'
+                  $nunitPath = Join-Path $env:GITHUB_WORKSPACE 'PSScriptAnalyzerReport.nunit.xml'
+                  $results = Invoke-ScriptAnalyzer -Path $env:GITHUB_WORKSPACE -Recurse -ReportSummary -Severity Information,Warning,Error
+                  $results | ConvertTo-Json -Depth 6 | Out-File -FilePath $reportPath -Encoding utf8
 
-                                    $total = @($results).Count
-                                    $failed = $total
-                                    $passed = 0
+                  $total = @($results).Count
+                  $failed = $total
+                  $passed = 0
 
-                                    $doc = New-Object System.Xml.Linq.XDocument
-                                    $testRun = New-Object System.Xml.Linq.XElement 'test-run'
-                                    $testRun.SetAttributeValue('id', '1')
-                                    $testRun.SetAttributeValue('name', 'PSScriptAnalyzer')
-                                    $testRun.SetAttributeValue('total', $total)
-                                    $testRun.SetAttributeValue('failed', $failed)
-                                    $testRun.SetAttributeValue('passed', $passed)
+                  $testRun = [System.Xml.Linq.XElement]::new('test-run')
+                  $testRun.SetAttributeValue('id', '1')
+                  $testRun.SetAttributeValue('name', 'PSScriptAnalyzer')
+                  $testRun.SetAttributeValue('total', $total)
+                  $testRun.SetAttributeValue('failed', $failed)
+                  $testRun.SetAttributeValue('passed', $passed)
 
-                                    $suite = New-Object System.Xml.Linq.XElement 'test-suite'
-                                    $suite.SetAttributeValue('type', 'Assembly')
-                                    $suite.SetAttributeValue('name', 'PSScriptAnalyzer')
+                  $suite = [System.Xml.Linq.XElement]::new('test-suite')
+                  $suite.SetAttributeValue('type', 'Assembly')
+                  $suite.SetAttributeValue('name', 'PSScriptAnalyzer')
 
-                                    if ($total -eq 0) {
-                                            $testRun.SetAttributeValue('total', 1)
-                                            $testRun.SetAttributeValue('failed', 0)
-                                            $testRun.SetAttributeValue('passed', 1)
+                  if ($total -eq 0) {
+                      $testRun.SetAttributeValue('total', 1)
+                      $testRun.SetAttributeValue('failed', 0)
+                      $testRun.SetAttributeValue('passed', 1)
 
-                                            $testCase = New-Object System.Xml.Linq.XElement 'test-case'
-                                            $testCase.SetAttributeValue('name', 'PSScriptAnalyzer clean')
-                                            $testCase.SetAttributeValue('result', 'Passed')
-                                            $suite.Add($testCase)
-                                    } else {
-                                            foreach ($r in $results) {
-                                                    $testCase = New-Object System.Xml.Linq.XElement 'test-case'
-                                                    $name = "$($r.RuleName) - $($r.ScriptName):$($r.Line)"
-                                                    $testCase.SetAttributeValue('name', $name)
-                                                    $testCase.SetAttributeValue('result', 'Failed')
+                      $testCase = [System.Xml.Linq.XElement]::new('test-case')
+                      $testCase.SetAttributeValue('name', 'PSScriptAnalyzer clean')
+                      $testCase.SetAttributeValue('result', 'Passed')
+                      $suite.Add($testCase)
+                  } else {
+                      foreach ($r in $results) {
+                          $testCase = [System.Xml.Linq.XElement]::new('test-case')
+                          $name = "$($r.RuleName) - $($r.ScriptName):$($r.Line)"
+                          $testCase.SetAttributeValue('name', $name)
+                          $testCase.SetAttributeValue('result', 'Failed')
 
-                                                    $failure = New-Object System.Xml.Linq.XElement 'failure'
-                                                    $message = New-Object System.Xml.Linq.XElement 'message', ($r.Message)
-                                                    $detailText = "Severity: $($r.Severity); Rule: $($r.RuleName); File: $($r.ScriptName); Line: $($r.Line)"
-                                                    $detail = New-Object System.Xml.Linq.XElement 'stack-trace', ($detailText)
-                                                    $failure.Add($message)
-                                                    $failure.Add($detail)
-                                                    $testCase.Add($failure)
+                          $failure = [System.Xml.Linq.XElement]::new('failure')
+                          $message = [System.Xml.Linq.XElement]::new('message', $r.Message)
+                          $detailText = "Severity: $($r.Severity); Rule: $($r.RuleName); File: $($r.ScriptName); Line: $($r.Line)"
+                          $detail = [System.Xml.Linq.XElement]::new('stack-trace', $detailText)
+                          $failure.Add($message)
+                          $failure.Add($detail)
+                          $testCase.Add($failure)
 
-                                                    $suite.Add($testCase)
-                                            }
-                                    }
+                          $suite.Add($testCase)
+                      }
+                  }
 
-                                    $testRun.Add($suite)
-                                    $doc.Add($testRun)
-                                    $doc.Save($nunitPath)
+                  $testRun.Add($suite)
+                  $doc = [System.Xml.Linq.XDocument]::new($testRun)
+                  $doc.Save($nunitPath)
 
-                                    Write-Host "PSScriptAnalyzer report saved to: $reportPath"
-                                    Write-Host "PSScriptAnalyzer NUnit report saved to: $nunitPath"
+                  Write-Host "PSScriptAnalyzer report saved to: $reportPath"
+                  Write-Host "PSScriptAnalyzer NUnit report saved to: $nunitPath"
             - name: Upload PSScriptAnalyzer report
               uses: actions/upload-artifact@v4
               with:
                 name: PSScriptAnalyzerReport
                 path: |
-                        SScriptAnalyzerReport.json
-                        PSScriptAnalyzerReport.nunit.xml
+                                        PSScriptAnalyzerReport.json
+                                        PSScriptAnalyzerReport.nunit.xml
             # Run tests
