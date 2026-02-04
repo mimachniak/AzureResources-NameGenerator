@@ -31,5 +31,99 @@ jobs:
                   $ProgressPreference = 'SilentlyContinue'
                   $ErrorActionPreference = 'Stop'
                   Install-Module -Name PSScriptAnalyzer -SkipPublisherCheck -Scope CurrentUser -MinimumVersion 1.19.1 -Force -Verbose
-                  Invoke-ScriptAnalyzer -Path $env:GITHUB_WORKSPACE -Recurse -ReportSummary -EnableExit
+                  $reportPath = Join-Path $env:GITHUB_WORKSPACE 'PSScriptAnalyzerReport.json'
+                  $nunitPath = Join-Path $env:GITHUB_WORKSPACE 'PSScriptAnalyzerReport.nunit.xml'
+                  $results = Invoke-ScriptAnalyzer -Path $env:GITHUB_WORKSPACE -Recurse -ReportSummary -Severity Information,Warning,Error
+                  $results | ConvertTo-Json -Depth 6 | Out-File -FilePath $reportPath -Encoding utf8
+
+                  $total = @($results).Count
+                  $failed = $total
+                  $passed = 0
+
+                  $testRun = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('test-run'))
+                  $testRun.SetAttributeValue('id', '1')
+                  $testRun.SetAttributeValue('name', 'PSScriptAnalyzer')
+                  $testRun.SetAttributeValue('total', $total)
+                  $testRun.SetAttributeValue('failed', $failed)
+                  $testRun.SetAttributeValue('passed', $passed)
+
+                  $suite = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('test-suite'))
+                  $suite.SetAttributeValue('type', 'Assembly')
+                  $suite.SetAttributeValue('name', 'PSScriptAnalyzer')
+
+                  if ($total -eq 0) {
+                      $testRun.SetAttributeValue('total', 1)
+                      $testRun.SetAttributeValue('failed', 0)
+                      $testRun.SetAttributeValue('passed', 1)
+
+                      $testCase = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('test-case'))
+                      $testCase.SetAttributeValue('name', 'PSScriptAnalyzer clean')
+                      $testCase.SetAttributeValue('result', 'Passed')
+                      $suite.Add($testCase)
+                  } else {
+                      foreach ($r in $results) {
+                          $testCase = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('test-case'))
+                          $name = "$($r.RuleName) - $($r.ScriptName):$($r.Line)"
+                          $testCase.SetAttributeValue('name', $name)
+                          $testCase.SetAttributeValue('result', 'Failed')
+
+                          $failure = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('failure'))
+                          $message = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('message'), $r.Message)
+                          $detailText = "Severity: $($r.Severity); Rule: $($r.RuleName); File: $($r.ScriptName); Line: $($r.Line)"
+                          $detail = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('stack-trace'), $detailText)
+                          $failure.Add($message)
+                          $failure.Add($detail)
+                          $testCase.Add($failure)
+
+                          $suite.Add($testCase)
+                      }
+                  }
+
+                  $testRun.Add($suite)
+                  $doc = [System.Xml.Linq.XDocument]::new($testRun)
+                  $doc.Save($nunitPath)
+
+                  Write-Host "PSScriptAnalyzer report saved to: $reportPath"
+                  Write-Host "PSScriptAnalyzer NUnit report saved to: $nunitPath"
+            - name: Upload PSScriptAnalyzer report
+              uses: actions/upload-artifact@v4
+              with:
+                name: PSScriptAnalyzerReport
+                path: |
+                        PSScriptAnalyzerReport.json
+                        PSScriptAnalyzerReport.nunit.xml
+            - name: Run Pester tests
+              shell: pwsh
+              run: |
+                $ProgressPreference = 'SilentlyContinue'
+                $ErrorActionPreference = 'Stop'
+                Install-Module -Name Pester -Scope CurrentUser -MinimumVersion 5.5.0 -Force -Verbose
+                $resultsPath = Join-Path $env:GITHUB_WORKSPACE 'PesterTestResults.xml'
+
+                $config = New-PesterConfiguration
+                $config.Run.Path = "$env:GITHUB_WORKSPACE/tests"
+                $config.Run.Exit = $true
+                $config.Output.Verbosity = 'Detailed'
+                $config.TestResult.Enabled = $true
+                $config.TestResult.OutputFormat = 'NUnitXml'
+                $config.TestResult.OutputPath = $resultsPath
+                  $config.CodeCoverage.Enabled = $true
+                  $config.CodeCoverage.Path = @(
+                      "$env:GITHUB_WORKSPACE/AzureResourcesNameGenerator/public/*.ps1"
+                  )
+                  $config.CodeCoverage.OutputFormat = 'JaCoCo'
+                  $config.CodeCoverage.OutputPath = "$env:GITHUB_WORKSPACE/coverage.xml"
+
+                Invoke-Pester -Configuration $config
+                Write-Host "Pester report saved to: $resultsPath"
+            - name: Upload Pester report
+              uses: actions/upload-artifact@v4
+              with:
+                name: PesterTestResults
+                path: PesterTestResults.xml
+            - name: Upload code coverage report
+              uses: actions/upload-artifact@v4
+              with:
+                name: PesterCodeCoverage
+                path: coverage.xml
             # Run tests
