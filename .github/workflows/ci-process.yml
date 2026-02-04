@@ -32,7 +32,8 @@ jobs:
                   $ErrorActionPreference = 'Stop'
                   Install-Module -Name PSScriptAnalyzer -SkipPublisherCheck -Scope CurrentUser -MinimumVersion 1.19.1 -Force -Verbose
                                     $reportPath = Join-Path $env:GITHUB_WORKSPACE 'PSScriptAnalyzerReport.json'
-                                    Invoke-ScriptAnalyzer -Path $env:GITHUB_WORKSPACE -Recurse -ReportSummary -Severity Information,Warning,Error -OutFile $reportPath
+                                    $results = Invoke-ScriptAnalyzer -Path $env:GITHUB_WORKSPACE -Recurse -ReportSummary -Severity Information,Warning,Error
+                                    $results | ConvertTo-Json -Depth 6 | Out-File -FilePath $reportPath -Encoding utf8
                                     Write-Host "PSScriptAnalyzer report saved to: $reportPath"
             - name: Upload PSScriptAnalyzer report
               uses: actions/upload-artifact@v4
