@@ -3,7 +3,7 @@
     RootModule = 'AzureResourcesNameGenerator.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.4'
+    ModuleVersion = '1.0.5'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop', 'Core')
@@ -30,7 +30,7 @@
     FunctionsToExport = @('*')
 
     # Cmdlets to export from this module
-    CmdletsToExport = @('New-AzResourceNameGenerator','Get-AzResourcesListGenerator')
+    CmdletsToExport = @('New-AzResourceNameGenerator','Get-AzResourcesListGenerator','New-AzResourceNameGeneratorGUI')
 
     # Variables to export from this module
     VariablesToExport = @()
@@ -48,8 +48,10 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = '
+            v.1.0.5
+                - Add UI interface for naming creation / export to bicep files with new cmdlet New-AzResourceNameGeneratorGUI.
             v.1.0.4
-                - Fix output for piplines
+                - Fix output to PS Custom object with generated name and details.
             v.1.0.3
                 - Add output to PS Custom object with generated name and details.
                 - Add bicep parameter to generate bicep variable declaration.
