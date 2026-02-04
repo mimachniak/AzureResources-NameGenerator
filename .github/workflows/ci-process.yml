@@ -107,6 +107,12 @@ jobs:
                 $config.TestResult.Enabled = $true
                 $config.TestResult.OutputFormat = 'NUnitXml'
                 $config.TestResult.OutputPath = $resultsPath
+                  $config.CodeCoverage.Enabled = $true
+                  $config.CodeCoverage.Path = @(
+                      "$env:GITHUB_WORKSPACE/AzureResourcesNameGenerator/public/*.ps1"
+                  )
+                  $config.CodeCoverage.OutputFormat = 'JaCoCo'
+                  $config.CodeCoverage.OutputPath = "$env:GITHUB_WORKSPACE/coverage.xml"
 
                 Invoke-Pester -Configuration $config
                 Write-Host "Pester report saved to: $resultsPath"
@@ -115,4 +121,9 @@ jobs:
               with:
                 name: PesterTestResults
                 path: PesterTestResults.xml
+            - name: Upload code coverage report
+              uses: actions/upload-artifact@v4
+              with:
+                name: PesterCodeCoverage
+                path: coverage.xml
             # Run tests
