@@ -4,22 +4,15 @@ $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Resolve-Path (Join-Path $here '..')
 $modulePath = Join-Path $repoRoot 'AzureResourcesNameGenerator' 'AzureResourcesNameGenerator.psd1'
 $resourcesData = Join-Path $repoRoot 'data' 'resourcetypes.json'
+$testResourcesData = Join-Path $repoRoot 'tests' 'resources' 'resourcetypes-test.json'
 $schemaData = Join-Path $repoRoot 'data' 'general_naming_shema.json'
 
 Import-Module $modulePath -Force
 
 Describe 'Get-AzResourcesListGenerator' {
-    Context 'Web data (mocked)' {
-        Mock Invoke-RestMethod {
-            @(
-                [pscustomobject]@{ resource = 'TypeA'; ShortName = 'a'; regx = '^a$'; validText = ''; invalidText = '' },
-                [pscustomobject]@{ resource = 'TypeB'; ShortName = 'b'; regx = '^b$'; validText = ''; invalidText = '' },
-                [pscustomobject]@{ resource = 'TypeA'; ShortName = 'a'; regx = '^a$'; validText = ''; invalidText = '' }
-            )
-        } -Verifiable
-
+    Context 'Local test data file' {
         It 'returns unique resource types when ShowOnlyResourceType is set' {
-            $result = Get-AzResourcesListGenerator -ResourcesData 'https://example.com/resourcetypes.json' -ShowOnlyResourceType
+            $result = Get-AzResourcesListGenerator -ResourcesData $testResourcesData -ShowOnlyResourceType
 
             $result | Should -HaveCount 2
             $result.ResourceType | Should -Contain 'TypeA'
@@ -27,7 +20,7 @@ Describe 'Get-AzResourcesListGenerator' {
         }
 
         It 'returns raw objects when no switches are set' {
-            $result = Get-AzResourcesListGenerator -ResourcesData 'https://example.com/resourcetypes.json'
+            $result = Get-AzResourcesListGenerator -ResourcesData $testResourcesData
 
             $result | Should -HaveCount 3
             $result[0].resource | Should -Be 'TypeA'
