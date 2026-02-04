@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
-$repoRoot = Resolve-Path (Join-Path $here '..')
+$repoRoot = (Resolve-Path (Join-Path $here '..')).Path
 $modulePath = Join-Path $repoRoot 'AzureResourcesNameGenerator' 'AzureResourcesNameGenerator.psd1'
 $resourcesData = Join-Path $repoRoot 'data' 'resourcetypes.json'
 $testResourcesData = Join-Path $repoRoot 'tests' 'resources' 'resourcetypes-test.json'
