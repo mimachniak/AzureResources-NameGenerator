@@ -40,14 +40,14 @@ jobs:
                   $failed = $total
                   $passed = 0
 
-                  $testRun = [System.Xml.Linq.XElement]::new('test-run')
+                  $testRun = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('test-run'))
                   $testRun.SetAttributeValue('id', '1')
                   $testRun.SetAttributeValue('name', 'PSScriptAnalyzer')
                   $testRun.SetAttributeValue('total', $total)
                   $testRun.SetAttributeValue('failed', $failed)
                   $testRun.SetAttributeValue('passed', $passed)
 
-                  $suite = [System.Xml.Linq.XElement]::new('test-suite')
+                  $suite = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('test-suite'))
                   $suite.SetAttributeValue('type', 'Assembly')
                   $suite.SetAttributeValue('name', 'PSScriptAnalyzer')
 
@@ -56,21 +56,21 @@ jobs:
                       $testRun.SetAttributeValue('failed', 0)
                       $testRun.SetAttributeValue('passed', 1)
 
-                      $testCase = [System.Xml.Linq.XElement]::new('test-case')
+                      $testCase = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('test-case'))
                       $testCase.SetAttributeValue('name', 'PSScriptAnalyzer clean')
                       $testCase.SetAttributeValue('result', 'Passed')
                       $suite.Add($testCase)
                   } else {
                       foreach ($r in $results) {
-                          $testCase = [System.Xml.Linq.XElement]::new('test-case')
+                          $testCase = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('test-case'))
                           $name = "$($r.RuleName) - $($r.ScriptName):$($r.Line)"
                           $testCase.SetAttributeValue('name', $name)
                           $testCase.SetAttributeValue('result', 'Failed')
 
-                          $failure = [System.Xml.Linq.XElement]::new('failure')
-                          $message = [System.Xml.Linq.XElement]::new('message', $r.Message)
+                          $failure = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('failure'))
+                          $message = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('message'), $r.Message)
                           $detailText = "Severity: $($r.Severity); Rule: $($r.RuleName); File: $($r.ScriptName); Line: $($r.Line)"
-                          $detail = [System.Xml.Linq.XElement]::new('stack-trace', $detailText)
+                          $detail = [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('stack-trace'), $detailText)
                           $failure.Add($message)
                           $failure.Add($detail)
                           $testCase.Add($failure)
