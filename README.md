@@ -5,6 +5,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-PowerShell%207%2B-lightgrey)
 ![Downloads](https://img.shields.io/powershellgallery/dt/AzureResourcesNameGenerator)
+![Coverage](https://img.shields.io/badge/coverage-report-informational)
 
 ---
 
@@ -24,6 +25,7 @@
    - [Output resources in bicep files names:](#Output-resources-in-bicep-files-names)
 - [Limitations](#limitations)
 - [Features](#features)
+- [Testing and code coverage](#testing-and-code-coverage)
 
 ---
 
@@ -36,6 +38,7 @@ The current list of commands implemented in the module:
 
 - [New-AzResourceNameGenerator](./docs/New-AzResourceNameGenerator.md)
 - [Get-AzResourcesListGenerator](./docs/Get-AzResourcesListGenerator.md)  
+- [New-AzResourceNameGeneratorGUI](./docs/New-AzResourceNameGenerator.md)
 
 
 ---
@@ -61,6 +64,17 @@ This module simplifies the process of creating Azure resource names that align w
 - **Bring you own naming convention** Loading your own custom naming schema with transformations in Json files. 
 - **Validation:** Validates names against Azure naming conventions and provides feedback.    
 - **Load your data** PowerShell module allow to load resource data / namiing schema form any source but in JSON type. 
+
+---
+
+## Testing and code coverage
+
+This repository uses **Pester** in CI to run tests and generate code coverage. The workflow produces a JaCoCo report file named `coverage.xml` and uploads it as a build artifact.
+
+**Where to find the report:**
+- CI artifact: `PesterCodeCoverage` (contains `coverage.xml`)
+
+If you want to run tests locally, run Pester in the repo root and a coverage file will be created as `coverage.xml`.
 
 ---
 

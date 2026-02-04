@@ -53,7 +53,7 @@ param(
     }
     elseif (Test-Path $ResourcesData) {
         #return 'Local Path'
-            $responseResources = Get-Content -Path $ResourcesData -Raw
+            $responseResources = Get-Content -Path $ResourcesData -Raw | ConvertFrom-Json
     }
     else {
         return 'Unknown'

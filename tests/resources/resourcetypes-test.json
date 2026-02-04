@@ -1,0 +1,23 @@
+[
+  {
+    "resource": "TypeA",
+    "ShortName": "a",
+    "regx": "^a$",
+    "validText": "",
+    "invalidText": ""
+  },
+  {
+    "resource": "TypeB",
+    "ShortName": "b",
+    "regx": "^b$",
+    "validText": "",
+    "invalidText": ""
+  },
+  {
+    "resource": "TypeA",
+    "ShortName": "a",
+    "regx": "^a$",
+    "validText": "",
+    "invalidText": ""
+  }
+]

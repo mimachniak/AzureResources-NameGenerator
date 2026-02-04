@@ -229,7 +229,7 @@ param(
     }
     elseif (Test-Path $ResourcesData) {
         #return 'Local Path'
-        $responseResources = Get-Content -Path $ResourcesData -Raw
+        $responseResources = Get-Content -Path $ResourcesData -Raw | ConvertFrom-Json
     }
     else {
         return 'Unknown'
@@ -329,6 +329,32 @@ param(
                 write-Verbose  "Validating resource name: $original against regex: $regex"
                 if ($original -match $regex) {
                  Write-Host "Valid: $original"
+                 
+                 # Add to output even when valid
+                 $resourceOutput += [PSCustomObject]@{
+                        resourceTypeName = $resourceTypeName
+                        regionName       = $regionName
+                        uniqueidentifier = $uniqueidentifier
+                        environment      = $environment
+                        abbreviation     = $resource.ShortName
+                        number           = $number
+                        regex            = $regex
+                        SchemaPattern = $generalSchemaPattern
+                        resourceNameGenerated     = $original
+                        removedChars     = ""
+                    }
+
+                 $resourceBicep += [PSCustomObject]@{
+                        resourceTypeName = $resourceTypeName
+                        regionName       = $regionName
+                        uniqueidentifier = $uniqueidentifier
+                        environment      = $environment
+                        abbreviation     = $resource.ShortName
+                        number           = $number
+                        SchemaPattern = $generalSchemaPattern
+                        resourceNameGenerated     = $original
+                        removedChars     = ""
+                    }
                 }
                 else {
                 $result = Sanitize-String -string $original -regex "$regex"
@@ -363,6 +389,7 @@ param(
                     }
 
                 }
+
             }
   
 
@@ -482,5 +509,7 @@ param(
         
     } # else end respond is true
 
+    # Return the generated resource names
+    return $resourceOutput
 
 } # function end process
