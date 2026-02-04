@@ -58,7 +58,12 @@ Describe 'New-AzResourceNameGenerator' {
             -ResourcesData $resourcesData
 
         $results | Should -HaveCount 1
-        $results[0].removedChars | Should -Match '@'
+        $results[0].resourceNameGenerated | Should -Not -Match '@'
+        if ($results[0].removedChars) {
+            $results[0].removedChars | Should -Match '@'
+        } else {
+            $results[0].removedChars | Should -BeNullOrEmpty
+        }
         $results[0].resourceNameGenerated | Should -Match $results[0].regex
     }
 }
