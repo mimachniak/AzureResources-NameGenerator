@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-PowerShell%207%2B-lightgrey)
 ![Downloads](https://img.shields.io/powershellgallery/dt/AzureResourcesNameGenerator)
-![Coverage](https://img.shields.io/badge/coverage-report-informational)
+[![CI](https://github.com/mimachniak/AzureResources-NameGenerator/actions/workflows/ci-process.yml/badge.svg)](https://github.com/mimachniak/AzureResources-NameGenerator/actions/workflows/ci-process.yml)
 
 ---
 
